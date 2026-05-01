@@ -10,7 +10,7 @@ import co.edu.vetcita.users.dto.LoginRequestDTO;
 import co.edu.vetcita.users.dto.RegisterRequestDTO;
 import co.edu.vetcita.users.dto.ResetPasswordRequestDTO;
 import co.edu.vetcita.users.repository.PasswordResetTokenRepository;
-import co.edu.vetcita.users.UserRepository;
+import co.edu.vetcita.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;

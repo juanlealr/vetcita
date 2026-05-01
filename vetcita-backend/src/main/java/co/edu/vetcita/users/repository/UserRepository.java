@@ -1,4 +1,4 @@
-package co.edu.vetcita.users;
+package co.edu.vetcita.users.repository;
 
 import co.edu.vetcita.users.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
