@@ -26,5 +26,23 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Inyectar Secretos de Producción
+        run: |
+          mkdir -p src/main/resources
+          cat <<EOF > src/main/resources/application-secrets.yml
+          spring:
+            datasource:
+              url: ${{ secrets.DB_URL }}
+              username: ${{ secrets.DB_USERNAME }}
+              password: ${{ secrets.DB_PASSWORD }}
+            mail:
+              username: ${{ secrets.MAIL_USERNAME }}
+              password: ${{ secrets.MAIL_PASSWORD }}
+          application:
+            security:
+              jwt:
+                secret-key: ${{ secrets.JWT_SECRET }}
+          EOF
+
       - name: Compilar con Maven
         run: mvn clean package -DskipTests

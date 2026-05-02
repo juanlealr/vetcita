@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://db.dfkprabmregabkqgkmhq.supabase.co:5432/postgres
-    username: postgres
-    password: VetCita2026*
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 20000
@@ -21,10 +21,22 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+        '[format_sql]': true
+
+  mail:
+      host: smtp.gmail.com
+      port: 587
+      username: ${MAIL_USERNAME}
+      password: ${MAIL_PASSWORD}
+      properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
 
 application:
   security:
     jwt:
-      secret-key: YmFzZTY0LWVuY29kZWQtc2VjcmV0LWtleS12ZXRjaXRhLW1vZHVsYXItMjAyNA==
+      secret-key: ${JWT_SECRET}
       expiration: 86400000
