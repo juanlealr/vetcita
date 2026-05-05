@@ -36,7 +36,7 @@ export interface ResetPasswordRequest {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = '/api/auth';
+  private readonly API_URL = 'http://localhost:8080/api/auth';
   private tokenSubject = new BehaviorSubject<string | null>(this.getToken());
   public token$ = this.tokenSubject.asObservable();
 
