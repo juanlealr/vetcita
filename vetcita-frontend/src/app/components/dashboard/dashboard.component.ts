@@ -8,101 +8,182 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <!-- Navigation -->
-      <nav class="bg-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 class="text-2xl font-bold text-gray-800">Vetcita</h1>
-          <button
-            (click)="logout()"
-            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200"
-          >
-            Cerrar sesión
-          </button>
+    <div class="min-h-screen bg-sky-50">
+      <!-- Header -->
+      <header class="bg-white shadow-sm">
+        <div class="mx-auto max-w-7xl flex items-center justify-between px-6 py-4">
+          <div class="flex items-center gap-4">
+            <div class="flex h-14 w-14 items-center justify-center rounded-full bg-sky-600 text-2xl font-bold text-white">V</div>
+            <div>
+              <p class="text-sm font-semibold text-sky-600 uppercase tracking-wider">Vet Cita</p>
+              <p class="text-sm text-slate-700">Sistema de Gestión Veterinaria</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <a routerLink="/register" class="px-6 py-2.5 rounded-full bg-sky-600 text-sm font-semibold text-white hover:bg-sky-700 shadow-md hover:shadow-lg transition">
+              Crear cuenta
+            </a>
+            <a routerLink="/login" class="px-6 py-2.5 text-sm font-semibold text-slate-700 hover:text-slate-900 border border-slate-300 rounded-full hover:border-slate-400 transition">
+              Iniciar cuenta
+            </a>
+          </div>
         </div>
-      </nav>
+      </header>
 
       <!-- Main Content -->
-      <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-lg p-8">
-          <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">Bienvenido a Vetcita</h2>
-            <p class="text-gray-600">Tu plataforma para gestionar servicios veterinarios</p>
+      <main class="mx-auto max-w-7xl px-6 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <!-- Left Section -->
+          <div>
+            <p class="text-sm font-semibold text-sky-600 mb-4">Plataforma completa para la clínica veterinaria</p>
+            <h1 class="text-5xl font-bold text-slate-900 mb-6 leading-tight">
+              Gestiona citas, pacientes y el historial clínico desde un solo lugar.
+            </h1>
+            <p class="text-lg text-slate-600 mb-8">
+              Selecciona tu rol y comienza a usar todas las herramientas de gestión veterinaria diseñadas para tu clínica.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex gap-4 mb-12">
+              <a routerLink="/register" class="px-6 py-3 rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-800 transition">
+                Crear cuenta
+              </a>
+              <a routerLink="/login" class="px-6 py-3 rounded-full border-2 border-slate-300 text-slate-900 font-semibold hover:border-slate-400 transition">
+                Iniciar cuenta
+              </a>
+            </div>
+
+            <!-- Role Cards Grid - 2 columns -->
+            <div class="grid grid-cols-2 gap-6">
+              <!-- Cliente -->
+              <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+                <div class="text-3xl mb-3">🐾</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Soy Cliente</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                  Agenda citas para tus mascotas, revisa historial médico y administra tus perfiles.
+                </p>
+                <a href="#" class="text-sky-600 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition">
+                  Acceder <span>→</span>
+                </a>
+              </div>
+
+              <!-- Recepcionista -->
+              <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+                <div class="text-3xl mb-3">📋</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Soy Recepcionista</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                  Gestiona citas, organiza el flujo de pacientes y controla la agenda de la clínica.
+                </p>
+                <a href="#" class="text-sky-600 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition">
+                  Acceder <span>→</span>
+                </a>
+              </div>
+
+              <!-- Veterinario -->
+              <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+                <div class="text-3xl mb-3">🩺</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Soy Veterinario</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                  Consulta tu agenda, atiende pacientes y registra diagnósticos clínicos.
+                </p>
+                <a href="#" class="text-sky-600 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition">
+                  Acceder <span>→</span>
+                </a>
+              </div>
+
+              <!-- Administrador -->
+              <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+                <div class="text-3xl mb-3">👑</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Soy Administrador</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                  Gestiona usuarios, veterinarios, servicios y supervisa la operación del sistema.
+                </p>
+                <a href="#" class="text-sky-600 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition">
+                  Acceder <span>→</span>
+                </a>
+              </div>
+            </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            <!-- Card Template -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 hover:shadow-lg transition">
-              <div class="text-4xl mb-4">🐾</div>
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Mis Mascotas</h3>
-              <p class="text-gray-600 mb-4">Gestiona la información de tus mascotas</p>
-              <button class="text-blue-600 hover:text-blue-700 font-medium">
-                Ver más →
-              </button>
-            </div>
+          <!-- Right Section - Features -->
+          <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 h-fit sticky top-6">
+            <p class="text-xs font-semibold text-sky-600 uppercase tracking-widest mb-4">Novedades</p>
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Todo tu flujo veterinario centralizado</h2>
+            <p class="text-sm text-slate-600 mb-8">
+              Controla citas, historial médico, clientes y servicios con una sola vista administrativa.
+            </p>
 
-            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 hover:shadow-lg transition">
-              <div class="text-4xl mb-4">📅</div>
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Citas</h3>
-              <p class="text-gray-600 mb-4">Agenda o consulta tus citas veterinarias</p>
-              <button class="text-green-600 hover:text-green-700 font-medium">
-                Ver más →
-              </button>
-            </div>
+            <!-- Features -->
+            <div class="space-y-6">
+              <!-- Feature 1 -->
+              <div class="flex gap-4">
+                <div class="flex-shrink-0">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
+                    <span class="text-lg">📅</span>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-slate-900 mb-1">Agenda inteligente</h3>
+                  <p class="text-sm text-slate-600">Organiza tus horarios y evita solapamientos.</p>
+                </div>
+              </div>
 
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 hover:shadow-lg transition">
-              <div class="text-4xl mb-4">💊</div>
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Historial Médico</h3>
-              <p class="text-gray-600 mb-4">Consulta el historial de tus mascotas</p>
-              <button class="text-purple-600 hover:text-purple-700 font-medium">
-                Ver más →
-              </button>
-            </div>
+              <!-- Feature 2 -->
+              <div class="flex gap-4">
+                <div class="flex-shrink-0">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+                    <span class="text-lg">📋</span>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-slate-900 mb-1">Historial clínico</h3>
+                  <p class="text-sm text-slate-600">Registra diagnósticos y seguimiento de pacientes.</p>
+                </div>
+              </div>
 
-            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-6 hover:shadow-lg transition">
-              <div class="text-4xl mb-4">💰</div>
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Facturación</h3>
-              <p class="text-gray-600 mb-4">Consulta tus facturas y pagos</p>
-              <button class="text-orange-600 hover:text-orange-700 font-medium">
-                Ver más →
-              </button>
-            </div>
-
-            <div class="bg-gradient-to-br from-pink-50 to-pink-100 rounded-lg p-6 hover:shadow-lg transition">
-              <div class="text-4xl mb-4">👤</div>
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Mi Perfil</h3>
-              <p class="text-gray-600 mb-4">Actualiza tu información personal</p>
-              <button class="text-pink-600 hover:text-pink-700 font-medium">
-                Ver más →
-              </button>
-            </div>
-
-            <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-6 hover:shadow-lg transition">
-              <div class="text-4xl mb-4">❓</div>
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Ayuda</h3>
-              <p class="text-gray-600 mb-4">Contacta con nuestro equipo de soporte</p>
-              <button class="text-red-600 hover:text-red-700 font-medium">
-                Ver más →
-              </button>
+              <!-- Feature 3 -->
+              <div class="flex gap-4">
+                <div class="flex-shrink-0">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100">
+                    <span class="text-lg">🔒</span>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-slate-900 mb-1">Acceso seguro</h3>
+                  <p class="text-sm text-slate-600">Controla permisos según rol y protege la información.</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   `,
   styles: []
 })
 export class DashboardComponent implements OnInit {
+  successMessage: string | null = null;
+
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    // Verify user is authenticated
+    this.successMessage = history.state?.message || null;
+
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
+      return;
     }
+  }
+
+  selectRole(role: string): void {
+    // Aquí puedes manejar la navegación según el rol seleccionado
+    console.log('Rol seleccionado:', role);
+    // Por ahora, redirige a un dashboard genérico
+    this.router.navigate(['/dashboard-role'], { state: { role } });
   }
 
   logout(): void {

@@ -91,7 +91,6 @@ public class AuthService {
             emailService.sendPasswordResetEmail(user.getEmail(), token);
         } catch (Exception e) {
 
-            System.err.println("Error enviando correo: " + e.getMessage());
             throw new RuntimeException("No se pudo enviar el correo de recuperación");
         }
         

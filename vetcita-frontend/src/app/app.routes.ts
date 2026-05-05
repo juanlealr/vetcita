@@ -5,6 +5,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ProfileComponent } from './components/user/profile.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -13,6 +14,11 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [authGuard]
+  },
   { 
     path: 'dashboard', 
     component: DashboardComponent,
