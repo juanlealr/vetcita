@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -11,10 +12,10 @@ import Swal from 'sweetalert2';
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="min-h-screen flex items-center justify-center bg-sky-100 px-4 py-10">
-      <div class="w-full max-w-[620px] rounded-[40px] border-4 border-sky-400 bg-sky-100 p-4 shadow-[0_35px_90px_rgba(14,165,233,0.20)]">
+      <div class="w-full max-w-155 rounded-[40px] border-4 border-sky-400 bg-sky-100 p-4 shadow-[0_35px_90px_rgba(14,165,233,0.20)]">
         <div class="rounded-[30px] border-4 border-sky-500 bg-white p-3 shadow-[0_18px_60px_rgba(15,23,42,0.1)]">
           <img
-            src="/assets/images/vet-cita-login-banner.png"
+            src="/assets/images/logo.png"
             alt="Vet Cita"
             class="mx-auto h-48 w-full rounded-[20px] object-cover"
           />
@@ -86,7 +87,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -121,13 +123,13 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.loading = false;
-        
-        // Redirigir al dashboard
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        this.loading = false;
-        
+        this.loading = false; 
+      
+        this.cdr.detectChanges(); 
+
         const backendMessage = error.error?.message || 'Error al iniciar sesión. Verifica tu email y contraseña.';
         
         Swal.fire({

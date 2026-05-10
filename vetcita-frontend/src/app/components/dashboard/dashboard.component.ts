@@ -118,7 +118,7 @@ import { AuthService } from '../../services/auth.service';
             <div class="space-y-6">
               <!-- Feature 1 -->
               <div class="flex gap-4">
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                   <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                     <span class="text-lg">📅</span>
                   </div>
@@ -131,7 +131,7 @@ import { AuthService } from '../../services/auth.service';
 
               <!-- Feature 2 -->
               <div class="flex gap-4">
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                   <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
                     <span class="text-lg">📋</span>
                   </div>
@@ -144,7 +144,7 @@ import { AuthService } from '../../services/auth.service';
 
               <!-- Feature 3 -->
               <div class="flex gap-4">
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                   <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100">
                     <span class="text-lg">🔒</span>
                   </div>

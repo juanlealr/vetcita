@@ -7,6 +7,9 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/user/profile.component';
 import { authGuard } from './guards/auth.guard';
+import { ClientLayoutComponent } from './components/client-layout/client-layout.component';
+import { AppointmentsComponent } from './components/appointments/appointments.component';
+import { PetFormComponent } from './components/pets/pet-form/pet-form.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -24,5 +27,18 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard]
   },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
+  {
+    path: 'client',
+    component: ClientLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'citas', pathMatch: 'full' },
+      { path: 'citas', component: AppointmentsComponent },
+      //{ path: 'mascotas', component: PetsListComponent },
+      { path: 'mascotas/nueva', component: PetFormComponent },
+      // { path: 'agendar', component: BookAppointmentComponent },
+      // { path: 'perfil', component: UserProfileComponent },
+    ]
+  }
 ];
