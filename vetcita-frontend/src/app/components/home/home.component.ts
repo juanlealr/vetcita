@@ -97,7 +97,13 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/dashboard']);
+      const role = this.authService.getUserRole();
+      
+      if (role === 'ROLE_CLIENT' || role === 'CLIENT') {
+         this.router.navigate(['/client/citas']);
+      } else {
+         this.router.navigate(['/dashboard']);
+      }
     }
   }
 }

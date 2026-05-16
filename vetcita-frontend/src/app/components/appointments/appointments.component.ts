@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="max-w-4xl">
       <div class="mb-8 bg-white rounded-3xl p-6 shadow-sm border border-sky-100 flex items-center justify-between">
-         <img src="/assets/images/vet-cita-logo.png" alt="Vet Cita" class="h-20">
+         <img src="/assets/images/logo.png" alt="Vet Cita" class="h-20">
       </div>
 
       <h1 class="text-3xl font-bold text-slate-900 mb-6">Mis citas</h1>

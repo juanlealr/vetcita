@@ -79,11 +79,48 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
+    
+    if (token === 'null' || token === 'undefined' || token === '') {
+      return null;
+    }
+    
+    return token;
+  }
+
+  getUserRole(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = token.split('.')[1];
+      const decodedPayload = JSON.parse(atob(payload));
+
+      return decodedPayload.role || null; 
+    } catch (e) {
+      console.error('Error decodificando token', e);
+      return null;
+    }
+  }
+
+  getUserId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = token.split('.')[1];
+      const decodedPayload = JSON.parse(atob(payload));
+      return decodedPayload.userId || null; 
+    } catch (e) {
+      console.error('Error obteniendo el ID del usuario', e);
+      return null;
+    }
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    const isAuth = token !== null;
+    return isAuth;
   }
 
   logout(): void {

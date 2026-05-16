@@ -14,6 +14,7 @@ import co.edu.vetcita.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,7 +48,12 @@ public class AuthService {
 
         userRepository.save(user);
 
-        var jwtToken = jwtService.generateToken(user);
+        Map<String, Object> extraClaims = Map.of(
+            "userId", user.getId(),
+            "role", user.getRole().name()
+        );
+        var jwtToken = jwtService.generateToken(extraClaims, user);
+        
         return AuthResponseDTO.builder()
                 .token(jwtToken)
                 .build();
@@ -65,7 +71,12 @@ public class AuthService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
 
-        var jwtToken = jwtService.generateToken(user);
+        Map<String, Object> extraClaims = Map.of(
+            "userId", user.getId(),
+            "role", user.getRole().name()
+        );
+        var jwtToken = jwtService.generateToken(extraClaims, user);
+        
         return AuthResponseDTO.builder()
                 .token(jwtToken)
                 .build();

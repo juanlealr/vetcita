@@ -123,7 +123,18 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/dashboard']);
+    
+        const role = this.authService.getUserRole();
+
+        if (role === 'ROLE_CLIENT' || role === 'CLIENT') {
+           this.router.navigate(['/client/citas']);
+        } else if (role === 'ROLE_ADMIN' || role === 'ADMIN') {
+           this.router.navigate(['/dashboard']);
+        } else if (role === 'ROLE_VET' || role === 'VET') {
+           this.router.navigate(['/vet/agenda']);
+        } else {
+           this.router.navigate(['/dashboard']);
+        }
       },
       error: (error) => {
         this.loading = false; 
