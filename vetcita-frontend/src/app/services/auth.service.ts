@@ -5,6 +5,9 @@ import { tap } from 'rxjs/operators';
 
 export interface AuthResponse {
   token: string;
+  firstName?: string;
+  lastName?: string;
+  photoUrl?: string;
 }
 
 export interface LoginRequest {
@@ -41,21 +44,35 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/register`, request).pipe(
-      tap((response) => {
-        if (response.token) {
-          this.setToken(response.token);
-        }
-      })
-    );
-  }
-
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, request).pipe(
       tap((response) => {
         if (response.token) {
           this.setToken(response.token);
+          
+          const userData = {
+            name: response.firstName,
+            lastName: response.lastName,
+            foto: response.photoUrl
+          };
+          localStorage.setItem('usuario', JSON.stringify(userData));
+        }
+      })
+    );
+  }
+
+  register(request: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.API_URL}/register`, request).pipe(
+      tap((response) => {
+        if (response.token) {
+          this.setToken(response.token);
+          
+          const userData = {
+            name: response.firstName,
+            lastName: response.lastName,
+            foto: response.photoUrl
+          };
+          localStorage.setItem('usuario', JSON.stringify(userData));
         }
       })
     );
@@ -125,6 +142,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('usuario'); 
     this.tokenSubject.next(null);
   }
 }

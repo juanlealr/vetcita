@@ -22,11 +22,6 @@ import { Pet, PetService } from '../../../services/pet.service';
         </a>
       </div>
 
-      <div class="bg-yellow-100 p-4 mb-4 text-xs font-mono rounded overflow-auto">
-        <strong>Debug Info:</strong>
-        <pre>{{ pets | json }}</pre>
-      </div>
-
       <div *ngIf="pets.length === 0 && !loading" class="bg-white rounded-2xl shadow-sm p-12 text-center border border-slate-100">
         <div class="text-6xl mb-4">🐕</div>
         <h3 class="text-xl font-bold text-slate-700 mb-2">Aún no tienes mascotas registradas</h3>

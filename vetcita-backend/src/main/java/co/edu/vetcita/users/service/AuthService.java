@@ -79,6 +79,9 @@ public class AuthService {
         
         return AuthResponseDTO.builder()
                 .token(jwtToken)
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                // .photoUrl(user.getPhotoUrl())
                 .build();
     }
 
