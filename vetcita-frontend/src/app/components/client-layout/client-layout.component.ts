@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -25,10 +25,6 @@ import { AuthService } from '../../services/auth.service';
         </div>
 
         <nav class="flex-1 px-4 py-8 space-y-3">
-          <a routerLink="/client/agendar" routerLinkActive="bg-[#11B0C8] shadow-md" class="flex items-center gap-3 px-5 py-3 rounded-full hover:bg-[#11B0C8]/80 transition">
-            <span class="text-xl">📅</span> <span class="font-semibold">Agendar cita</span>
-          </a>
-
           <a routerLink="/client/citas" routerLinkActive="bg-[#11B0C8] shadow-md" class="flex items-center gap-3 px-5 py-3 rounded-full hover:bg-[#11B0C8]/80 transition">
             <span class="text-xl">🗓️</span>
             <span class="font-semibold">Mis citas</span>
@@ -46,9 +42,11 @@ import { AuthService } from '../../services/auth.service';
         </nav>
 
         <div class="p-6">
-          <button (click)="logout()" class="flex items-center gap-3 px-5 py-3 w-full rounded-full bg-slate-900/30 hover:bg-slate-900/50 transition">
-            <span class="text-rose-400 text-xl">🚪</span>
-            <span class="font-semibold">Cerrar sesión</span>
+          <button (click)="logout()" class="flex items-center gap-3 px-5 py-3 w-full rounded-full bg-slate-900/30 hover:bg-slate-900/50 transition text-left">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-rose-400 shrink-0">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-4h-2v4H5V5h14v4h2V5c0-1.1-.9-2-2-2zm-2 8h-8v2h8v3l5-4-5-4v3z"/>
+            </svg>
+            <span class="font-semibold text-white">Cerrar sesión</span>
           </button>
         </div>
       </aside>
@@ -69,23 +67,21 @@ export class ClientLayoutComponent implements OnInit {
   defaultAvatar: string = 'https://ui-avatars.com/api/?background=cbd5e1&color=334155&name=U';
   avatarUrl: string = this.defaultAvatar;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadUserData();
   }
 
   loadUserData() {
-    // ⚠️ AQUÍ DEBES CONECTAR CON TUS DATOS REALES ⚠️
-    // Dependiendo de cómo funcione tu sistema, podría ser algo como:
-    // const user = this.authService.getCurrentUser();
-    // O leyendo del LocalStorage:
     const userString = localStorage.getItem('usuario'); 
 
     if (userString) {
       const user = JSON.parse(userString);
       
-      // Concatenamos nombre y apellido (Ajusta 'name' y 'lastName' según tu BD)
       const firstName = user.name || user.nombre || '';
       const lastName = user.lastName || user.apellido || '';
       this.fullName = `${firstName} ${lastName}`.trim() || 'Cliente';
@@ -106,5 +102,6 @@ export class ClientLayoutComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

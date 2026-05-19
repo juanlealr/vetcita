@@ -11,6 +11,7 @@ import { ClientLayoutComponent } from './components/client-layout/client-layout.
 import { AppointmentsComponent } from './components/appointments/appointments.component';
 import { PetFormComponent } from './components/pets/pet-form/pet-form.component';
 import { PetListComponent } from './components/pets/pet-list/pet-list.component';
+import { ScheduleAppointmentComponent } from './components/appointments/schedule-appointment.component'; 
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -28,19 +29,17 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard]
   },
-{
+  {
     path: 'client',
     component: ClientLayoutComponent,
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'citas', pathMatch: 'full' },
       { path: 'citas', component: AppointmentsComponent },
-      
       { path: 'mascotas', component: PetListComponent }, 
-      
       { path: 'mascotas/nueva', component: PetFormComponent },
+      { path: 'agendar', component: ScheduleAppointmentComponent },
       
-      // { path: 'agendar', component: BookAppointmentComponent },
       // { path: 'perfil', component: UserProfileComponent },
     ]
   },
