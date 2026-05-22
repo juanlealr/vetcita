@@ -4,6 +4,7 @@ import co.edu.vetcita.users.domain.User;
 import co.edu.vetcita.users.dto.UpdateProfileDTO;
 import co.edu.vetcita.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public User getByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -28,5 +30,12 @@ public class ProfileService {
         if (dto.getIdentificationNumber() != null) user.setIdentificationNumber(dto.getIdentificationNumber());
 
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public void changePassword(Long userId, String newPassword) {
+        var user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }

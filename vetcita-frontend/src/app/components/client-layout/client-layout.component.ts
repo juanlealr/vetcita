@@ -73,26 +73,26 @@ export class ClientLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadUserData();
+    this.authService.currentUser$.subscribe((user) => {
+      this.setUserData(user);
+    });
   }
 
-  loadUserData() {
-    const userString = localStorage.getItem('usuario'); 
-
-    if (userString) {
-      const user = JSON.parse(userString);
-      
-      const firstName = user.name || user.nombre || '';
-      const lastName = user.lastName || user.apellido || '';
-      this.fullName = `${firstName} ${lastName}`.trim() || 'Cliente';
-
-      if (user.photoUrl || user.foto) {
-        this.avatarUrl = user.photoUrl || user.foto;
-      } else {
-        this.avatarUrl = `https://ui-avatars.com/api/?background=cbd5e1&color=334155&name=${firstName}+${lastName}`;
-      }
-    } else {
+  setUserData(user: any) {
+    if (!user) {
       this.fullName = 'Usuario';
+      this.avatarUrl = this.defaultAvatar;
+      return;
+    }
+
+    const firstName = user.name || user.nombre || '';
+    const lastName = user.lastName || user.apellido || '';
+    this.fullName = `${firstName} ${lastName}`.trim() || 'Cliente';
+
+    if (user.photoUrl || user.foto) {
+      this.avatarUrl = user.photoUrl || user.foto;
+    } else {
+      this.avatarUrl = `https://ui-avatars.com/api/?background=cbd5e1&color=334155&name=${firstName}+${lastName}`;
     }
   }
 
