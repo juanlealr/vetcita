@@ -4,6 +4,6 @@ public enum IdentificationType {
     CC,
     CE,
     TI,
-    PAS,
+    PASAPORTE,
     NIT
 }

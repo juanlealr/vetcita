@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { finalize } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -80,7 +81,7 @@ import Swal from 'sweetalert2';
               <div class="relative">
                 <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sky-600">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.896-1.596-5.496-4.196-7.092-7.092l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.896-1.596-5.496-4.196-7.092-7.092l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                   </svg>
                 </span>
                 <input type="tel" formControlName="phone" placeholder="Número telefónico" maxlength="10" (keypress)="allowOnlyNumbers($event)"
@@ -217,7 +218,7 @@ export class RegisterComponent {
     { code: 'CC', name: 'Cédula de ciudadanía' },
     { code: 'TI', name: 'Tarjeta de identidad' },
     { code: 'CE', name: 'Cédula de extranjería' },
-    { code: 'PAS', name: 'Pasaporte' },
+    { code: 'PASAPORTE', name: 'Pasaporte' },
     { code: 'NIT', name: 'NIT' }
   ];
 
@@ -306,31 +307,34 @@ export class RegisterComponent {
       password: this.registerForm.get('password')?.value
     };
 
-    this.authService.register(registerData).subscribe({
-      next: () => {
-        Swal.fire({
-          icon: 'success',
-          title: '¡Registro exitoso!',
-          text: 'Tu cuenta ha sido creada correctamente. Por favor inicia sesión.',
-          confirmButtonColor: '#0284c7'
-        }).then(() => {
-          this.router.navigate(['/login']);
-        });
-      },
-      error: (err) => {
-        this.loading = false;
-        
-        this.cdr.detectChanges(); 
-        
-        const errorMsg = err?.error?.message || 'Error al registrar. Verifica los datos.';
-        
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: errorMsg,
-          confirmButtonColor: '#0284c7'
-        });
-      }
-    });
+    this.authService.register(registerData)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Registro exitoso!',
+            text: 'Tu cuenta ha sido creada correctamente. Por favor inicia sesión.',
+            confirmButtonColor: '#0284c7'
+          }).then(() => {
+            this.router.navigate(['/login']);
+          });
+        },
+        error: (err) => {
+          const errorMsg = err?.error?.message || 'Error en el servidor. Verifica los datos o tu conexión.';
+          
+          Swal.fire({
+            icon: 'error',
+            title: 'Error de registro',
+            text: errorMsg,
+            confirmButtonColor: '#0284c7'
+          });
+        }
+      });
   }
 }
