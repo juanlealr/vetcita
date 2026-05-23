@@ -34,13 +34,21 @@ export interface ResetPasswordRequest {
   newPassword: string;
 }
 
+export interface ChangePasswordRequest {
+  newPassword: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly API_URL = 'http://localhost:8080/api/auth';
+  private readonly USER_API_URL = 'http://localhost:8080/api/users';
   private tokenSubject = new BehaviorSubject<string | null>(this.getToken());
   public token$ = this.tokenSubject.asObservable();
+
+  private currentUserSubject = new BehaviorSubject<any>(this.getStoredUser());
+  public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -56,6 +64,7 @@ export class AuthService {
             foto: response.photoUrl
           };
           localStorage.setItem('usuario', JSON.stringify(userData));
+          this.currentUserSubject.next(userData);
         }
       })
     );
@@ -77,6 +86,12 @@ export class AuthService {
     });
   }
 
+  changePassword(request: ChangePasswordRequest): Observable<string> {
+    return this.http.post(`${this.USER_API_URL}/me/change-password`, request, {
+      responseType: 'text'
+    });
+  }
+
   setToken(token: string): void {
     localStorage.setItem('auth_token', token);
     this.tokenSubject.next(token);
@@ -90,6 +105,26 @@ export class AuthService {
     }
     
     return token;
+  }
+
+  getStoredUser(): any {
+    const userString = localStorage.getItem('usuario');
+    if (!userString) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(userString);
+    } catch {
+      return null;
+    }
+  }
+
+  updateStoredUser(updatedData: Partial<{ name: string; lastName: string; foto: string }>): void {
+    const currentUser = this.getStoredUser() || {};
+    const newUser = { ...currentUser, ...updatedData };
+    localStorage.setItem('usuario', JSON.stringify(newUser));
+    this.currentUserSubject.next(newUser);
   }
 
   getUserRole(): string | null {
@@ -131,5 +166,6 @@ export class AuthService {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('usuario'); 
     this.tokenSubject.next(null);
+    this.currentUserSubject.next(null);
   }
 }

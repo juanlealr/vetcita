@@ -1,6 +1,7 @@
 package co.edu.vetcita.users.controller;
 
 import co.edu.vetcita.users.domain.User;
+import co.edu.vetcita.users.dto.ChangePasswordDTO;
 import co.edu.vetcita.users.dto.UpdateProfileDTO;
 import co.edu.vetcita.users.dto.UserProfileDTO;
 import co.edu.vetcita.users.service.ProfileService;
@@ -29,5 +30,14 @@ public class ProfileController {
     ) {
         var updated = profileService.updateProfile(currentUser.getId(), dto);
         return ResponseEntity.ok(UserProfileDTO.from(updated));
+    }
+
+    @PostMapping("/me/change-password")
+    public ResponseEntity<String> changePassword(
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody ChangePasswordDTO dto
+    ) {
+        profileService.changePassword(currentUser.getId(), dto.getNewPassword());
+        return ResponseEntity.ok("Contraseña actualizada correctamente");
     }
 }

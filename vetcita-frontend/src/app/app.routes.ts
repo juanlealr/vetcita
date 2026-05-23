@@ -57,6 +57,7 @@ export const routes: Routes = [
       { path: 'citas', component: AppointmentsComponent },
       { path: 'mascotas', component: PetListComponent }, 
       { path: 'mascotas/nueva', component: PetFormComponent },
+          { path: 'perfil', component: ProfileComponent },
       { path: 'agendar', component: ScheduleAppointmentComponent },
     ]
   },
