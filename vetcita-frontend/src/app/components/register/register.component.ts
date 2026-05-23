@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
         
         <div class="rounded-[30px] border-4 border-sky-500 bg-white p-3 shadow-[0_18px_60px_rgba(15,23,42,0.1)]">
           <img
-            src="/assets/images/vet-cita-login-banner.png"
+            src="/assets/images/logo.png"
             class="mx-auto h-48 w-full rounded-[20px] object-cover"
             alt="Banner de registro"
           />
@@ -79,33 +79,30 @@ import Swal from 'sweetalert2';
             <div>
               <div class="relative">
                 <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sky-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-current">
-                    <path d="M21 6.75H3v-1.5h18v1.5Zm0 4.5H3V9h18v2.25Zm0 4.5H3v-1.5h18v1.5ZM3 19.5h18v-1.5H3v1.5Z"/>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.896-1.596-5.496-4.196-7.092-7.092l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                   </svg>
                 </span>
-                <input type="tel" formControlName="phone" placeholder="Número telefónico" (keypress)="allowOnlyNumbers($event)"
+                <input type="tel" formControlName="phone" placeholder="Número telefónico" maxlength="10" (keypress)="allowOnlyNumbers($event)"
                   class="w-full rounded-full border border-sky-300 bg-sky-100 px-14 py-4 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"/>
               </div>
               <div *ngIf="isFieldInvalid('phone')" class="mt-2 pl-4 block text-xs text-rose-500">
-                <div *ngIf="isFieldInvalid('phone')" class="mt-2 pl-4 block text-xs text-rose-500">
-                  <span *ngIf="registerForm.get('phone')?.hasError('required')">El teléfono es requerido</span>
-                  <span *ngIf="registerForm.get('phone')?.hasError('pattern')">Debe empezar por 3 y tener 10 dígitos</span>
-                </div>
+                <span *ngIf="registerForm.get('phone')?.hasError('required')">El teléfono es requerido</span>
+                <span *ngIf="registerForm.get('phone')?.hasError('pattern')">Debe empezar por 3 y tener 10 dígitos</span>
               </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-              
               <div>
                 <div class="relative">
                   <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sky-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current" viewBox="0 0 24 24">
-                      <path d="M4 4h16v16H4z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
                     </svg>
                   </span>
                   <select formControlName="identification_type"
-                    class="w-full rounded-full border border-sky-300 bg-sky-100 px-14 py-4 text-xs text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 cursor-pointer">
-                    <option value="" disabled selected>Tipo de documento</option>
+                    class="w-full rounded-full border border-sky-300 bg-sky-100 pl-12 pr-4 py-4 text-xs text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 cursor-pointer">
+                    <option value="" disabled selected>Documento</option>
                     <option *ngFor="let doc of documentTypes" [value]="doc.code">
                       {{ doc.name }}
                     </option>
@@ -128,11 +125,9 @@ import Swal from 'sweetalert2';
                   <span *ngIf="registerForm.get('identification_number')?.hasError('pattern')">Inválido</span>
                 </div>
               </div>
-
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-              
               <div>
                 <div class="relative">
                   <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sky-600">
@@ -183,7 +178,6 @@ import Swal from 'sweetalert2';
                   No coinciden
                 </div>
               </div>
-
             </div>
 
             <div *ngIf="errorMessage" class="mt-5 text-rose-500 text-sm text-center font-medium">
@@ -198,6 +192,13 @@ import Swal from 'sweetalert2';
               {{ loading ? 'Registrando...' : 'Registrarse' }}
             </button>
 
+            <div class="mt-6 text-center text-sm text-slate-900">
+              <p>
+                ¿Ya tienes una cuenta?
+                <a routerLink="/login" class="font-semibold underline hover:text-sky-700">Iniciar sesión</a>
+              </p>
+            </div>
+
           </form>
         </div>
       </div>
@@ -209,7 +210,6 @@ export class RegisterComponent {
   loading = false;
   errorMessage = '';
   
-  // Variables para ocultar/mostrar las contraseñas
   showPassword = false;
   showConfirmPassword = false;
 
@@ -224,7 +224,8 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router, 
+    private cdr: ChangeDetectorRef
   ) {
     this.registerForm = this.fb.group({
       first_name: ['', [
@@ -249,7 +250,7 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [
         Validators.required, 
-        Validators.pattern(/^3[0-9]{9}$/)
+        Validators.pattern(/^3[0-9]{9}$/) // Esto ya valida que empiece por 3 y tenga 10 en total
       ]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
@@ -307,12 +308,20 @@ export class RegisterComponent {
 
     this.authService.register(registerData).subscribe({
       next: () => {
-        this.router.navigate(['/login'], {
-          state: { message: 'Registro exitoso. Por favor inicia sesión.' }
+        Swal.fire({
+          icon: 'success',
+          title: '¡Registro exitoso!',
+          text: 'Tu cuenta ha sido creada correctamente. Por favor inicia sesión.',
+          confirmButtonColor: '#0284c7'
+        }).then(() => {
+          this.router.navigate(['/login']);
         });
       },
       error: (err) => {
         this.loading = false;
+        
+        this.cdr.detectChanges(); 
+        
         const errorMsg = err?.error?.message || 'Error al registrar. Verifica los datos.';
         
         Swal.fire({
