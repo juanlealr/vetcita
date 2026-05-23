@@ -11,7 +11,7 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
   template: `
     <div class="min-h-screen bg-white">
       <!-- Header -->
-      <div class="bg-gradient-to-r from-teal-400 to-teal-600 pb-12">
+      <div class="bg-linear-to-r from-teal-400 to-teal-600 pb-12">
         <div class="max-w-4xl mx-auto px-4 py-8">
           <h1 class="text-4xl font-bold text-white mb-2">MI PERFIL </h1>
           <p class="text-teal-100">Administra tu información personal y de contacto</p>
@@ -183,7 +183,7 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                 placeholder="Nueva contraseña"
               />
-              <span class="mt-2 block text-xs text-rose-500 min-h-[1.25rem]">
+              <span class="mt-2 block text-xs text-rose-500 min-h-5">
                 <span *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid">Mínimo 6 caracteres.</span>
               </span>
             </div>
@@ -196,7 +196,7 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                 placeholder="Repite la contraseña"
               />
-              <span class="mt-2 block text-xs text-rose-500 min-h-[1.25rem]">
+              <span class="mt-2 block text-xs text-rose-500 min-h-5">
                 <span *ngIf="passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched">Las contraseñas no coinciden.</span>
               </span>
             </div>
@@ -289,24 +289,6 @@ export class ProfileComponent implements OnInit {
     this.generateAvatar();
   }
 
-  generateAvatar(): void {
-    const firstName = this.profileForm.get('firstName')?.value || 'U';
-    const lastName = this.profileForm.get('lastName')?.value || '';
-    this.avatarUrl = `https://ui-avatars.com/api/?background=14B8A6&color=ffffff&name=${firstName}+${lastName}&bold=true`;
-  }
-
-  setEditMode(edit: boolean) {
-    this.editMode = edit;
-    Object.keys(this.profileForm.controls).forEach(key => {
-      if (key === 'email') {
-        this.profileForm.get(key)?.disable();
-      } else {
-        if (edit) this.profileForm.get(key)?.enable();
-        else this.profileForm.get(key)?.disable();
-      }
-    });
-  }
-
   setUserAvatar(user: any): void {
     if (!user) {
       this.generateAvatar();
@@ -389,7 +371,6 @@ export class ProfileComponent implements OnInit {
           lastName: updatedUser.lastName
         });
         this.savePhotoToStorage();
-        // exit edit mode after successful save
         this.setEditMode(false);
       },
       error: (error) => {
