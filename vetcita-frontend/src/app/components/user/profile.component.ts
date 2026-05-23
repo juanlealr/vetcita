@@ -109,6 +109,8 @@ export class ProfileComponent implements OnInit {
   loading = false;
   successMessage = '';
   errorMessage = '';
+  editMode = false;
+  avatarUrl: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -126,6 +128,25 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProfile();
+    this.generateAvatar();
+  }
+
+  generateAvatar(): void {
+    const firstName = this.profileForm.get('firstName')?.value || 'U';
+    const lastName = this.profileForm.get('lastName')?.value || '';
+    this.avatarUrl = `https://ui-avatars.com/api/?background=14B8A6&color=ffffff&name=${firstName}+${lastName}&bold=true`;
+  }
+
+  setEditMode(edit: boolean) {
+    this.editMode = edit;
+    Object.keys(this.profileForm.controls).forEach(key => {
+      if (key === 'email') {
+        this.profileForm.get(key)?.disable();
+      } else {
+        if (edit) this.profileForm.get(key)?.enable();
+        else this.profileForm.get(key)?.disable();
+      }
+    });
   }
 
   loadProfile(): void {
@@ -139,6 +160,8 @@ export class ProfileComponent implements OnInit {
           identificationType: profile.identificationType,
           identificationNumber: profile.identificationNumber
         });
+        // start in view mode
+        this.setEditMode(false);
       },
       error: () => {
         this.errorMessage = 'No se pudo cargar tu perfil. Vuelve a intentarlo.';
@@ -167,12 +190,21 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.successMessage = 'Perfil actualizado correctamente.';
         this.loading = false;
+        // exit edit mode after successful save
+        this.setEditMode(false);
       },
       error: (error) => {
         this.loading = false;
         this.errorMessage = this.getErrorMessage(error, 'No se pudo actualizar tu perfil. Intenta nuevamente.');
       }
     });
+  }
+
+  onCancel(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.setEditMode(false);
+    this.loadProfile();
   }
 
   private getErrorMessage(error: any, fallback: string): string {

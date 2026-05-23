@@ -250,7 +250,7 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [
         Validators.required, 
-        Validators.pattern(/^3[0-9]{9}$/) // Esto ya valida que empiece por 3 y tenga 10 en total
+        Validators.pattern(/^3[0-9]{9}$/)
       ]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]

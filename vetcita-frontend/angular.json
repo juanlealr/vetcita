@@ -32,7 +32,6 @@
               }
             ],
             "styles": [
-              "sweetalert2/dist/sweetalert2.min.css",
               "src/styles.css"
             ]
           },
