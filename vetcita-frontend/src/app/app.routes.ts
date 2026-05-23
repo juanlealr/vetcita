@@ -7,6 +7,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/user/profile.component';
 import { authGuard } from './guards/auth.guard';
+import { publicGuard } from './core/guards/public-guard';
 import { ClientLayoutComponent } from './components/client-layout/client-layout.component';
 import { AppointmentsComponent } from './components/appointments/appointments.component';
 import { PetFormComponent } from './components/pets/pet-form/pet-form.component';
@@ -15,10 +16,28 @@ import { ScheduleAppointmentComponent } from './components/appointments/schedule
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'reset-password', component: ResetPasswordComponent },
+  
+  { 
+    path: 'login', 
+    component: LoginComponent,
+    canActivate: [publicGuard]
+  },
+  { 
+    path: 'register', 
+    component: RegisterComponent,
+    canActivate: [publicGuard]
+  },
+  { 
+    path: 'forgot-password', 
+    component: ForgotPasswordComponent,
+    canActivate: [publicGuard]
+  },
+  { 
+    path: 'reset-password', 
+    component: ResetPasswordComponent,
+    canActivate: [publicGuard] 
+  },
+
   {
     path: 'profile',
     component: ProfileComponent,
@@ -40,9 +59,8 @@ export const routes: Routes = [
       { path: 'mascotas/nueva', component: PetFormComponent },
           { path: 'perfil', component: ProfileComponent },
       { path: 'agendar', component: ScheduleAppointmentComponent },
-      
-      // { path: 'perfil', component: UserProfileComponent },
     ]
   },
+  
   { path: '**', redirectTo: '' } 
 ];

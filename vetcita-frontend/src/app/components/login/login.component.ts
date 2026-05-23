@@ -101,7 +101,7 @@ import { finalize } from 'rxjs/operators';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
-  showPassword = false; // <-- Nueva variable para controlar la visibilidad
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -135,6 +135,8 @@ export class LoginComponent implements OnInit {
         showConfirmButton: false,
         timer: 3000
       });
+
+      window.history.replaceState({}, '');
     }
   }
 

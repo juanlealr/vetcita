@@ -286,6 +286,25 @@ export class ProfileComponent implements OnInit {
     });
 
     this.loadProfile();
+    this.generateAvatar();
+  }
+
+  generateAvatar(): void {
+    const firstName = this.profileForm.get('firstName')?.value || 'U';
+    const lastName = this.profileForm.get('lastName')?.value || '';
+    this.avatarUrl = `https://ui-avatars.com/api/?background=14B8A6&color=ffffff&name=${firstName}+${lastName}&bold=true`;
+  }
+
+  setEditMode(edit: boolean) {
+    this.editMode = edit;
+    Object.keys(this.profileForm.controls).forEach(key => {
+      if (key === 'email') {
+        this.profileForm.get(key)?.disable();
+      } else {
+        if (edit) this.profileForm.get(key)?.enable();
+        else this.profileForm.get(key)?.disable();
+      }
+    });
   }
 
   setUserAvatar(user: any): void {

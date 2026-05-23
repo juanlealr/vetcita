@@ -71,21 +71,7 @@ export class AuthService {
   }
 
   register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/register`, request).pipe(
-      tap((response) => {
-        if (response.token) {
-          this.setToken(response.token);
-          
-          const userData = {
-            name: response.firstName,
-            lastName: response.lastName,
-            foto: response.photoUrl
-          };
-          localStorage.setItem('usuario', JSON.stringify(userData));
-          this.currentUserSubject.next(userData);
-        }
-      })
-    );
+    return this.http.post<AuthResponse>(`${this.API_URL}/register`, request);
   }
 
   forgotPassword(request: ForgotPasswordRequest): Observable<string> {
