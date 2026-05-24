@@ -12,6 +12,11 @@ export interface UserProfile {
   identificationNumber: string;
   role: string;
   active: boolean;
+  photo?: string | null;            
+  photoContentType?: string | null;
+}
+export interface ClientSummary extends UserProfile {
+  mascotas: number;
 }
 
 export interface UpdateUserProfileRequest {
@@ -27,6 +32,7 @@ export interface UpdateUserProfileRequest {
 })
 export class UserService {
   private readonly API_URL = '/api/users';
+  // private readonly ADMIN_API_URL = '/api/admin/clients';
 
   constructor(private http: HttpClient) {}
 
@@ -36,5 +42,9 @@ export class UserService {
 
   updateCurrentUser(request: UpdateUserProfileRequest): Observable<UserProfile> {
     return this.http.put<UserProfile>(`${this.API_URL}/me`, request);
+  }
+  
+  getAllClients(): Observable<ClientSummary[]> {
+    return this.http.get<ClientSummary[]>(`${this.API_URL}?role=CLIENT`); 
   }
 }

@@ -154,11 +154,11 @@ export class LoginComponent implements OnInit {
         if (role === 'ROLE_CLIENT' || role === 'CLIENT') {
            this.router.navigate(['/client/citas']);
         } else if (role === 'ROLE_ADMIN' || role === 'ADMIN') {
-           this.router.navigate(['/dashboard']);
+           this.router.navigate(['/admin/dashboard']);
         } else if (role === 'ROLE_VET' || role === 'VET') {
            this.router.navigate(['/vet/agenda']);
         } else {
-           this.router.navigate(['/dashboard']);
+           this.router.navigate(['/recepcionist/dashboard']);
         }
       },
       error: (error) => {
