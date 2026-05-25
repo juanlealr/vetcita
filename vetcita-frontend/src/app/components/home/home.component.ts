@@ -102,7 +102,7 @@ export class HomeComponent implements OnInit {
       if (role === 'ROLE_CLIENT' || role === 'CLIENT') {
          this.router.navigate(['/client/citas']);
       } else {
-         this.router.navigate(['/dashboard']);
+         this.router.navigate(['/admin/dashboard']);
       }
     }
   }

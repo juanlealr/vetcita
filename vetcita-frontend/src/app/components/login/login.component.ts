@@ -11,7 +11,15 @@ import { finalize } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-sky-100 px-4 py-10">
+    <div class="relative min-h-screen flex items-center justify-center bg-sky-100 px-4 py-10">
+      
+      <a routerLink="/" class="absolute top-6 left-6 md:top-8 md:left-8 flex items-center gap-2 text-sky-800 bg-white/60 hover:bg-white px-4 py-2.5 rounded-full shadow-sm backdrop-blur-md transition-all border border-sky-200 font-semibold text-sm z-10 hover:shadow-md hover:-translate-x-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        <span class="hidden sm:inline">Home</span>
+      </a>
+
       <div class="w-full max-w-155 rounded-[40px] border-4 border-sky-400 bg-sky-100 p-4 shadow-[0_35px_90px_rgba(14,165,233,0.20)]">
         <div class="rounded-[30px] border-4 border-sky-500 bg-white p-3 shadow-[0_18px_60px_rgba(15,23,42,0.1)]">
           <img
@@ -25,7 +33,6 @@ import { finalize } from 'rxjs/operators';
           <h1 class="text-center text-3xl font-semibold text-slate-900">Acceder</h1>
 
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-5">
-            
             <div>
               <div class="relative">
                 <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sky-600">

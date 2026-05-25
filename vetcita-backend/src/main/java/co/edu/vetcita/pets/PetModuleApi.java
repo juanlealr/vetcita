@@ -15,4 +15,8 @@ public class PetModuleApi {
                 .map(pet -> new PetInfo(pet.getName(), pet.getSpecies().name()))
                 .orElse(new PetInfo("Mascota eliminada", ""));
     }
+
+    public int countPetsByOwnerId(Long ownerId) {
+        return petRepository.countByOwnerId(ownerId);
+    }
 }

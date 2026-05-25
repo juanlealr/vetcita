@@ -15,8 +15,8 @@ export class AppointmentService {
   }
 
   updateAppointment(id: number, data: any): Observable<any> {
-  return this.http.put(`/api/appointments/${id}`, data);
-}
+    return this.http.put(`${this.baseUrl}/appointments/${id}`, data);
+  }
 
   getServices(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/services`);

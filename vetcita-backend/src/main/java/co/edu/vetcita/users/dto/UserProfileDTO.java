@@ -17,8 +17,10 @@ public class UserProfileDTO {
     private IdentificationType identificationType;
     private String identificationNumber;
     private Role role;
+    private boolean active;
+    private int mascotasCount;
 
-    public static UserProfileDTO from(User user) {
+    public static UserProfileDTO from(User user, int mascotasCount) {
         return UserProfileDTO.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
@@ -28,6 +30,12 @@ public class UserProfileDTO {
                 .identificationType(user.getIdentificationType())
                 .identificationNumber(user.getIdentificationNumber())
                 .role(user.getRole())
+                .active(user.isActive())
+                .mascotasCount(mascotasCount)
                 .build();
+    }
+
+    public static UserProfileDTO from(User user) {
+        return from(user, 0);
     }
 }

@@ -310,7 +310,7 @@ export class AppointmentsComponent implements OnInit {
 
   onDateChange(newDate: string) {
     this.newDate = newDate;
-    this.newTime = ''; // resetear hora seleccionada
+    this.newTime = '';
     const vetId = this.editingAppointment()?.vetId;
     if (vetId && newDate) {
       this.loadAvailableTimes(vetId, newDate);

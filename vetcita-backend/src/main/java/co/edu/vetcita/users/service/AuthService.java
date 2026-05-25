@@ -81,7 +81,7 @@ public class AuthService {
                 .token(jwtToken)
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                // .photoUrl(user.getPhotoUrl())
+                .mustChangePassword(user.isMustChangePassword()) // NUEVO: Mapeo de la bandera
                 .build();
     }
 

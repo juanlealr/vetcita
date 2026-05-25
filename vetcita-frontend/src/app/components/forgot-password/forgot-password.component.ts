@@ -3,18 +3,29 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-sky-100 px-4 py-10">
+    <div class="relative min-h-screen flex items-center justify-center bg-sky-100 px-4 py-10">
+
+      <div class="absolute top-6 left-6 sm:top-8 sm:left-8 z-10">
+        <a routerLink="/" class="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-sky-700 shadow-[0_4px_14px_0_rgba(14,165,233,0.2)] transition-transform hover:scale-105 hover:bg-sky-50">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+          </svg>
+          Inicio
+        </a>
+      </div>
+
       <div class="w-full max-w-155 rounded-[40px] border-4 border-sky-400 bg-sky-100 p-4 shadow-[0_35px_90px_rgba(14,165,233,0.20)]">
         
         <div class="rounded-[30px] border-4 border-sky-500 bg-white p-3 shadow-[0_18px_60px_rgba(15,23,42,0.1)]">
           <img
-            src="/assets/images/vet-cita-login-banner.png"
+            src="/assets/images/logo.png"
             alt="Vet Cita"
             class="mx-auto h-48 w-full rounded-[20px] object-cover"
           />
@@ -40,20 +51,14 @@ import { AuthService } from '../../services/auth.service';
                 placeholder="Correo electrónico"
                 class="w-full rounded-full border border-sky-300 bg-sky-100 px-14 py-4 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
               />
-              <span *ngIf="isFieldInvalid('email')" class="mt-2 pl-4 block text-xs text-rose-500">Por favor ingresa un email válido</span>
-            </div>
-
-            <div *ngIf="successMessage" class="rounded-3xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 text-center">
-              {{ successMessage }}
-            </div>
-
-            <div *ngIf="errorMessage" class="rounded-3xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 text-center">
-              {{ errorMessage }}
+              <span *ngIf="isFieldInvalid('email')" class="mt-2 pl-4 block text-xs text-rose-500">
+                Por favor ingresa un email válido
+              </span>
             </div>
 
             <button
               type="submit"
-              [disabled]="forgotPasswordForm.invalid || loading || !!successMessage"
+              [disabled]="forgotPasswordForm.invalid || loading"
               class="w-full rounded-full bg-sky-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-sky-500/20 transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
             >
               {{ loading ? 'Enviando enlace...' : 'Enviar enlace' }}
@@ -70,14 +75,11 @@ import { AuthService } from '../../services/auth.service';
         </div>
       </div>
     </div>
-  `,
-  styles: []
+  `
 })
 export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;
   loading = false;
-  errorMessage = '';
-  successMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -98,15 +100,31 @@ export class ForgotPasswordComponent {
     if (this.forgotPasswordForm.invalid) return;
 
     this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
 
     this.authService.forgotPassword(this.forgotPasswordForm.value).subscribe({
-      next: (res) => {
-        this.successMessage = "Si el correo existe, recibirás un enlace pronto.";
+      next: () => {
+        this.loading = false;
+        this.forgotPasswordForm.reset();
+        
+        Swal.fire({
+          icon: 'success',
+          title: '¡Enlace enviado!',
+          text: 'Si el correo existe, recibirás un enlace pronto para restablecer tu contraseña.',
+          confirmButtonColor: '#0284c7'
+        }).then(() => {
+          this.router.navigate(['/login']);
+        });
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || "El correo no está registrado en nuestro sistema.";
+        this.loading = false;
+        const backendMessage = err.error?.message || "El correo no está registrado en nuestro sistema.";
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: backendMessage,
+          confirmButtonColor: '#0284c7'
+        });
       }
     });
   }

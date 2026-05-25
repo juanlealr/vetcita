@@ -9,4 +9,5 @@ import java.util.List;
 public interface PetRepository extends JpaRepository<Pet, Long> {
     List<Pet> findByOwnerId(Long ownerId);
     boolean existsByOwnerIdAndNameIgnoreCaseAndSpecies(Long ownerId, String name, Species species);
+    int countByOwnerId(Long ownerId);
 }

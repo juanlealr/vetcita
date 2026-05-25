@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
         
         <div class="rounded-[30px] border-4 border-sky-500 bg-white p-3 shadow-[0_18px_60px_rgba(15,23,42,0.1)]">
           <img
-            src="/assets/images/vet-cita-login-banner.png"
+            src="/assets/images/logo.png"
             alt="Vet Cita"
             class="mx-auto h-48 w-full rounded-[20px] object-cover"
           />

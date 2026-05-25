@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { UserService } from '../../services/user.service'; 
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-client-form',
@@ -25,48 +27,75 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
         <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" class="space-y-6">
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
             <div class="flex flex-col gap-1">
               <label class="text-sm font-semibold text-slate-700">Nombres *</label>
-              <input type="text" formControlName="firstName" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-sky-400 focus:bg-white transition" placeholder="Ej. Juan">
-              <span *ngIf="clientForm.get('firstName')?.invalid && clientForm.get('firstName')?.touched" class="text-xs text-red-500">El nombre es requerido</span>
+              <input type="text" formControlName="firstName" 
+                (input)="allowOnlyLetters($event, 'firstName')"
+                class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
+                [ngClass]="{'border-red-400': isFieldInvalid('firstName'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('firstName')}"
+                placeholder="Ej. Juan">
+              <span *ngIf="isFieldInvalid('firstName')" class="text-xs text-red-500 font-medium">El nombre es requerido y solo debe contener letras</span>
             </div>
 
             <div class="flex flex-col gap-1">
               <label class="text-sm font-semibold text-slate-700">Apellidos *</label>
-              <input type="text" formControlName="lastName" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-sky-400 focus:bg-white transition" placeholder="Ej. Pérez">
+              <input type="text" formControlName="lastName" 
+                (input)="allowOnlyLetters($event, 'lastName')"
+                class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
+                [ngClass]="{'border-red-400': isFieldInvalid('lastName'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('lastName')}"
+                placeholder="Ej. Pérez">
+              <span *ngIf="isFieldInvalid('lastName')" class="text-xs text-red-500 font-medium">El apellido es requerido y solo debe contener letras</span>
             </div>
 
             <div class="flex flex-col gap-1">
               <label class="text-sm font-semibold text-slate-700">Tipo de Documento *</label>
-              <select formControlName="identificationType" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-sky-400 focus:bg-white transition text-slate-700">
+              <select formControlName="identificationType" 
+                class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition text-slate-700"
+                [ngClass]="{'border-red-400': isFieldInvalid('identificationType'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('identificationType')}">
                 <option value="" disabled>Seleccione una opción</option>
                 <option value="CC">Cédula de Ciudadanía (CC)</option>
                 <option value="CE">Cédula de Extranjería (CE)</option>
                 <option value="TI">Tarjeta de Identidad (TI)</option>
-                <option value="PASSPORT">Pasaporte</option>
+                <option value="PASAPORTE">Pasaporte</option>
+                <option value="NIT">NIT</option>
               </select>
+              <span *ngIf="isFieldInvalid('identificationType')" class="text-xs text-red-500 font-medium">Seleccione un tipo de documento</span>
             </div>
 
             <div class="flex flex-col gap-1">
               <label class="text-sm font-semibold text-slate-700">Número de Documento *</label>
-              <input type="text" formControlName="identificationNumber" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-sky-400 focus:bg-white transition" placeholder="Ej. 10456789">
+              <input type="text" formControlName="identificationNumber" 
+                class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
+                [ngClass]="{'border-red-400': isFieldInvalid('identificationNumber'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('identificationNumber')}"
+                placeholder="Ej. 10456789">
+              <span *ngIf="isFieldInvalid('identificationNumber')" class="text-xs text-red-500 font-medium">Ingrese un número válido (sin espacios)</span>
             </div>
 
             <div class="flex flex-col gap-1">
               <label class="text-sm font-semibold text-slate-700">Correo Electrónico *</label>
-              <input type="email" formControlName="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-sky-400 focus:bg-white transition" placeholder="ejemplo@correo.com">
+              <input type="email" formControlName="email" 
+                class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
+                [ngClass]="{'border-red-400': isFieldInvalid('email'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('email')}"
+                placeholder="ejemplo@correo.com">
+              <span *ngIf="isFieldInvalid('email')" class="text-xs text-red-500 font-medium">Ingrese un correo electrónico válido</span>
             </div>
 
             <div class="flex flex-col gap-1">
-              <label class="text-sm font-semibold text-slate-700">Teléfono *</label>
-              <input type="text" formControlName="phone" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-sky-400 focus:bg-white transition" placeholder="Ej. 300 123 4567">
+              <label class="text-sm font-semibold text-slate-700">Teléfono Celular *</label>
+              <input type="text" formControlName="phone" maxlength="10"
+                (input)="allowOnlyNumbers($event, 'phone')"
+                class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
+                [ngClass]="{'border-red-400': isFieldInvalid('phone'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('phone')}"
+                placeholder="Ej. 3001234567">
+              <span *ngIf="isFieldInvalid('phone')" class="text-xs text-red-500 font-medium">Debe empezar por 3 y tener exactamente 10 dígitos numéricos</span>
             </div>
             
             <div *ngIf="isEditMode" class="flex flex-col gap-1 md:col-span-2">
               <label class="text-sm font-semibold text-slate-700">Estado de la cuenta</label>
               <div class="flex items-center gap-2 mt-2">
-                <input type="checkbox" formControlName="active" id="activeState" class="w-5 h-5 text-sky-500 rounded border-slate-300 focus:ring-sky-500">
-                <label for="activeState" class="text-slate-600">El cliente está activo y puede iniciar sesión</label>
+                <input type="checkbox" formControlName="active" id="activeState" class="w-5 h-5 text-sky-500 rounded border-slate-300 focus:ring-sky-500 cursor-pointer">
+                <label for="activeState" class="text-slate-600 cursor-pointer select-none">El cliente está activo y puede iniciar sesión</label>
               </div>
             </div>
           </div>
@@ -75,8 +104,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
             <a routerLink="/admin/clientes" class="px-6 py-3 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition cursor-pointer">
               Cancelar
             </a>
-            <button type="submit" [disabled]="clientForm.invalid" class="bg-[#20b2aa] hover:bg-[#1c9c95] disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-xl font-bold transition shadow-sm">
-              {{ isEditMode ? 'Guardar Cambios' : 'Registrar Cliente' }}
+            <button type="submit" [disabled]="clientForm.invalid || isSubmitting" ...>
+              {{ isSubmitting ? 'Procesando...' : (isEditMode ? 'Guardar Cambios' : 'Registrar Cliente') }}
             </button>
           </div>
 
@@ -89,26 +118,26 @@ export class ClientFormComponent implements OnInit {
   clientForm: FormGroup;
   isEditMode: boolean = false;
   clientId: number | null = null;
+  isSubmitting: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {
-    // Inicializamos el formulario con validaciones
     this.clientForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       identificationType: ['', Validators.required],
       identificationNumber: ['', [Validators.required, Validators.pattern('^[0-9A-Za-z]+$')]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9 ]+$')]],
-      active: [true] // Por defecto activo al crear
+      phone: ['', [Validators.required, Validators.pattern('^3[0-9]{9}$')]], 
+      active: [true] 
     });
   }
 
   ngOnInit(): void {
-    // Revisamos si en la URL viene un parámetro 'id'
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -119,44 +148,105 @@ export class ClientFormComponent implements OnInit {
     });
   }
 
+  allowOnlyLetters(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement;
+    const sanitizedValue = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');
+    this.clientForm.get(controlName)?.setValue(sanitizedValue, { emitEvent: false });
+  }
+
+  allowOnlyNumbers(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement;
+    const sanitizedValue = input.value.replace(/[^0-9]/g, '');
+    this.clientForm.get(controlName)?.setValue(sanitizedValue, { emitEvent: false });
+  }
+  
+  isFieldInvalid(field: string): boolean {
+    const control = this.clientForm.get(field);
+    return control ? control.invalid && (control.dirty || control.touched) : false;
+  }
+
   loadClientData(id: number) {
-    // Aquí llamarías a tu UserService para obtener los datos del cliente
-    // this.userService.getClientById(id).subscribe(...)
-    
-    // Simulación de carga de datos para llenar el formulario en modo edición
-    const mockData = {
-      firstName: 'Juan',
-      lastName: 'Perez',
-      identificationType: 'CC',
-      identificationNumber: '10456789',
-      email: 'juan.perez@email.com',
-      phone: '3001234567',
-      active: true
-    };
-    
-    this.clientForm.patchValue(mockData);
+    this.userService.getClientById(id).subscribe({
+      next: (clientData) => {
+        this.clientForm.patchValue({
+          firstName: clientData.firstName,
+          lastName: clientData.lastName,
+          identificationType: clientData.identificationType,
+          identificationNumber: clientData.identificationNumber,
+          email: clientData.email,
+          phone: clientData.phone,
+          active: clientData.active
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo cargar la información del cliente.',
+          confirmButtonColor: '#20b2aa'
+        });
+        this.router.navigate(['/admin/clientes']);
+      }
+    });
   }
 
   onSubmit() {
     if (this.clientForm.invalid) {
-      this.clientForm.markAllAsTouched(); // Marca todos para mostrar errores
+      this.clientForm.markAllAsTouched();
       return;
     }
 
     const formData = this.clientForm.value;
 
-    if (this.isEditMode) {
-      console.log('Actualizando cliente con ID:', this.clientId, formData);
-      // this.userService.updateClient(this.clientId, formData).subscribe(...)
+    if (this.isEditMode && this.clientId) {
+      this.userService.updateClient(this.clientId, formData).subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Actualizado!',
+            text: 'El cliente se ha actualizado correctamente.',
+            confirmButtonColor: '#20b2aa',
+            timer: 2000,
+            showConfirmButton: false
+          }).then(() => {
+            this.router.navigate(['/admin/clientes']);
+          });
+        },
+        error: (err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Hubo un error al actualizar el cliente. Verifica los datos.',
+            confirmButtonColor: '#20b2aa'
+          });
+        }
+      });
     } else {
-      // Nota: Al backend probablemente debas enviarle un password temporal
-      // o el backend debería generarlo y enviarlo por correo.
-      console.log('Creando nuevo cliente:', formData);
-      // this.userService.createClient(formData).subscribe(...)
+      this.isSubmitting = true;
+      this.userService.createClient(formData).subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          Swal.fire({
+            icon: 'success',
+            title: '¡Registrado!',
+            text: 'El cliente ha sido creado exitosamente.',
+            confirmButtonColor: '#20b2aa',
+            timer: 2000,
+            showConfirmButton: false
+          }).then(() => {
+            this.router.navigate(['/admin/clientes']);
+          });
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Hubo un error al crear el cliente. Es posible que el correo o documento ya existan.',
+            confirmButtonColor: '#20b2aa'
+          });
+        }
+      });
     }
-
-    // Redirigimos a la tabla después de guardar
-    // this.router.navigate(['/admin/clientes']);
-    alert(this.isEditMode ? 'Cliente actualizado (Mock)' : 'Cliente creado (Mock)');
   }
 }
