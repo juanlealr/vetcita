@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router'; // <-- Añadido ActivatedRoute
 import { PetService } from '../../../services/pet.service';
 import Swal from 'sweetalert2';
 
@@ -13,8 +13,8 @@ import Swal from 'sweetalert2';
     <div class="max-w-4xl mx-auto">
       
       <div class="flex items-center gap-4 mb-8">
-        <a routerLink="/client/mascotas" 
-           class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition">
+        <a [routerLink]="returnUrl" 
+           class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
@@ -144,10 +144,14 @@ export class PetFormComponent implements OnInit {
   maxDate: string = '';
   isSubmitting = false;
 
+  clientId: number | null = null;
+  returnUrl: any[] = ['/client/mascotas'];
+
   constructor(
     private fb: FormBuilder,
     private petService: PetService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     const lettersOnly = '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$';
 
@@ -165,6 +169,14 @@ export class PetFormComponent implements OnInit {
 
   ngOnInit() {
     this.maxDate = new Date().toISOString().split('T')[0];
+
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.clientId = +id;
+        this.returnUrl = ['/admin/clientes', this.clientId];
+      }
+    });
   }
 
   isInvalid(field: string): boolean {
@@ -191,7 +203,11 @@ export class PetFormComponent implements OnInit {
 
     this.isSubmitting = true;
     
-    this.petService.registerPet(this.petForm.value).subscribe({
+    const request$ = this.clientId 
+      ? this.petService.registerPetForClient(this.clientId, this.petForm.value)
+      : this.petService.registerPet(this.petForm.value);
+    
+    request$.subscribe({
       next: (response) => {
         this.isSubmitting = false;
         
@@ -201,7 +217,7 @@ export class PetFormComponent implements OnInit {
           text: 'Los datos se han guardado correctamente.',
           confirmButtonColor: '#0C7489'
         }).then(() => {
-          this.router.navigate(['/client/mascotas']); 
+          this.router.navigate(this.returnUrl); 
         });
       },
       error: (error) => {
@@ -211,7 +227,7 @@ export class PetFormComponent implements OnInit {
           Swal.fire({
             icon: 'warning',
             title: 'Mascota duplicada',
-            text: error.error.message || 'Esta mascota ya se encuentra registrada.',
+            text: error.error?.message || 'Esta mascota ya se encuentra registrada.',
             confirmButtonColor: '#0C7489'
           });
         } else {

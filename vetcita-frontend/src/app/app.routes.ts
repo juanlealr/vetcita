@@ -61,6 +61,7 @@ export const routes: Routes = [
       { path: 'clientes/nuevo', component: ClientFormComponent },
       { path: 'clientes/editar/:id', component: ClientFormComponent },
       { path: 'clientes/:id', component: ClientDetailComponent },
+      { path: 'clientes/:id/mascotas/nueva', component: PetFormComponent },
       
       // { path: 'servicios', component: ServicesListComponent },
       // { path: 'veterinarios', component: VetListComponent },

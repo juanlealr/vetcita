@@ -29,4 +29,12 @@ export class PetService {
   registerPet(petData: any): Observable<any> {
     return this.http.post<any>(this.API_URL, petData);
   }
+
+  getPetsByClientId(clientId: number): Observable<Pet[]> {
+    return this.http.get<Pet[]>(`${this.API_URL}/user/${clientId}`);
+  }
+
+  registerPetForClient(clientId: number, petData: any): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/user/${clientId}`, petData);
+  }
 }

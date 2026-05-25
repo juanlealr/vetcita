@@ -34,4 +34,18 @@ public class PetController {
 
         return ResponseEntity.ok(petService.getMyPets(ownerId));
     }
+
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<PetResponseDTO>> getPetsByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(petService.getMyPets(userId)); 
+    }
+
+    @PostMapping("/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PetResponseDTO> registerPetForUser(
+            @PathVariable Long userId, 
+            @Valid @RequestBody PetRequestDTO request) {
+        return new ResponseEntity<>(petService.registerPet(userId, request), HttpStatus.CREATED);
+    }
 }
