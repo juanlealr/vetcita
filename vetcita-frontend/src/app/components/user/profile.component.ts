@@ -10,36 +10,33 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
   imports: [CommonModule, ReactiveFormsModule],
   template: `
     <div class="min-h-screen bg-white">
-      <!-- Header -->
-      <div class="bg-linear-to-r from-teal-400 to-teal-600 pb-12">
+      <div class="bg-linear-to-r from-sky-500 to-sky-700 pb-12">
         <div class="max-w-4xl mx-auto px-4 py-8">
-          <h1 class="text-4xl font-bold text-white mb-2">MI PERFIL </h1>
-          <p class="text-teal-100">Administra tu información personal y de contacto</p>
+          <h1 class="text-4xl font-bold text-white mb-2">MI PERFIL</h1>
+          <p class="text-sky-100">Administra tu información personal y de contacto</p>
         </div>
       </div>
 
       <div class="max-w-4xl mx-auto px-4 -mt-8 pb-12">
-        <!-- Messages -->
-        <div *ngIf="successMessage" class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+        <div *ngIf="successMessage" class="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-lg text-sm">
           ✓ {{ successMessage }}
         </div>
-        <div *ngIf="errorMessage" class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+        <div *ngIf="errorMessage" class="mb-4 bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-lg text-sm">
           ✗ {{ errorMessage }}
         </div>
 
-        <!-- Photo Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6 border border-slate-100">
           <div class="flex items-center gap-6">
             <img
               [src]="avatarUrl"
               alt="Foto de perfil"
-              class="w-24 h-24 rounded-full border-4 border-teal-200 object-cover"
+              class="w-24 h-24 rounded-full border-4 border-sky-200 object-cover"
             />
             <div>
-              <h2 class="text-2xl font-bold text-gray-800">{{ profileForm.get('firstName')?.value }} {{ profileForm.get('lastName')?.value }}</h2>
-              <p class="text-gray-500 mt-1">Cliente</p>
-              <button type="button" class="mt-3 inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 font-medium" (click)="photoInput.click()">
-                <span></span> Cambiar foto
+              <h2 class="text-2xl font-bold text-slate-800">{{ profileForm.get('firstName')?.value }} {{ profileForm.get('lastName')?.value }}</h2>
+              <p class="text-slate-500 mt-1">Cliente</p>
+              <button type="button" class="mt-3 inline-flex items-center gap-2 text-sky-600 hover:text-sky-800 font-medium transition-colors" (click)="photoInput.click()">
+                Cambiar foto
               </button>
               <input #photoInput type="file" accept="image/*" (change)="onPhotoSelected($event)" class="hidden" />
               <p *ngIf="photoError" class="mt-2 text-sm text-rose-500">{{ photoError }}</p>
@@ -48,99 +45,95 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
         </div>
 
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Personal Info Card -->
-          <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="bg-white rounded-lg shadow-md p-6 border border-slate-100">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-bold text-gray-800">Información personal</h3>
-              <span class="text-2xl"></span>
+              <h3 class="text-lg font-bold text-slate-800">Información personal</h3>
             </div>
 
             <div class="grid gap-4">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm text-gray-600 mb-1">Nombre completo</label>
-                  <div *ngIf="!editMode" class="text-gray-800 font-medium py-2">
+                  <label class="block text-sm text-slate-600 mb-1">Nombre completo</label>
+                  <div *ngIf="!editMode" class="text-slate-800 font-medium py-2">
                     {{ profileForm.get('firstName')?.value }} {{ profileForm.get('lastName')?.value }}
                   </div>
                   <div *ngIf="editMode" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <input
                       type="text"
                       formControlName="firstName"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      class="w-full px-3 py-2 border border-sky-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                       placeholder="Nombre"
                     />
                     <input
                       type="text"
                       formControlName="lastName"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      class="w-full px-3 py-2 border border-sky-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                       placeholder="Apellido"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label class="block text-sm text-gray-600 mb-1">Tipo de documento</label>
-                  <div *ngIf="!editMode" class="text-gray-800 font-medium py-2">
-                    {{ profileForm.get('identificationType')?.value === 'CC' ? 'Cédula de Ciudadanía' :
-                       profileForm.get('identificationType')?.value === 'CE' ? 'Cédula de Extranjería' :
-                       profileForm.get('identificationType')?.value === 'PP' ? 'Pasaporte' : 'N/A' }}
+                  <label class="block text-sm text-slate-600 mb-1">Tipo de documento</label>
+                  <div *ngIf="!editMode" class="text-slate-800 font-medium py-2">
+                    {{ getDocumentTypeName(profileForm.get('identificationType')?.value) }}
                   </div>
                   <select
                     *ngIf="editMode"
                     formControlName="identificationType"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    class="w-full px-3 py-2 border border-sky-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                   >
                     <option value="">Selecciona un tipo</option>
                     <option value="CC">Cédula de Ciudadanía</option>
+                    <option value="TI">Tarjeta de Identidad</option>
                     <option value="CE">Cédula de Extranjería</option>
-                    <option value="PP">Pasaporte</option>
+                    <option value="PASAPORTE">Pasaporte</option>
+                    <option value="NIT">NIT</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label class="block text-sm text-gray-600 mb-1">Número de documento</label>
-                <div *ngIf="!editMode" class="text-gray-800 font-medium py-2">
+                <label class="block text-sm text-slate-600 mb-1">Número de documento</label>
+                <div *ngIf="!editMode" class="text-slate-800 font-medium py-2">
                   {{ profileForm.get('identificationNumber')?.value }}
                 </div>
                 <input
                   *ngIf="editMode"
                   type="text"
                   formControlName="identificationNumber"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  class="w-full px-3 py-2 border border-sky-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                 />
               </div>
             </div>
           </div>
 
-          <!-- Contact Info Card -->
-          <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="bg-white rounded-lg shadow-md p-6 border border-slate-100">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-bold text-gray-800">Información de contacto</h3>
-              <span class="text-2xl"></span>
+              <h3 class="text-lg font-bold text-slate-800">Información de contacto</h3>
             </div>
 
             <div class="grid gap-4">
               <div>
-                <label class="block text-sm text-gray-600 mb-1">Email</label>
-                <div *ngIf="!editMode" class="text-gray-800 font-medium py-2">{{ profileForm.get('email')?.value }}</div>
+                <label class="block text-sm text-slate-600 mb-1">Email</label>
+                <div *ngIf="!editMode" class="text-slate-800 font-medium py-2">{{ profileForm.get('email')?.value }}</div>
                 <input
                   *ngIf="editMode"
                   type="email"
                   formControlName="email"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                  class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed text-sm"
                   readonly
                 />
               </div>
 
               <div>
-                <label class="block text-sm text-gray-600 mb-1">Teléfono</label>
-                <div *ngIf="!editMode" class="text-gray-800 font-medium py-2">{{ profileForm.get('phone')?.value }}</div>
+                <label class="block text-sm text-slate-600 mb-1">Teléfono</label>
+                <div *ngIf="!editMode" class="text-slate-800 font-medium py-2">{{ profileForm.get('phone')?.value }}</div>
                 <input
                   *ngIf="editMode"
                   type="tel"
                   formControlName="phone"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  class="w-full px-3 py-2 border border-sky-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                 />
               </div>
 
@@ -148,7 +141,7 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
                 <button
                   type="submit"
                   [disabled]="profileForm.invalid || loading"
-                  class="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-2 px-4 rounded-lg transition duration-200"
+                  class="w-full bg-sky-600 hover:bg-sky-700 disabled:bg-slate-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
                 >
                   {{ loading ? 'Guardando...' : 'Guardar cambios' }}
                 </button>
@@ -157,30 +150,29 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
           </div>
         </form>
 
-        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="bg-white rounded-lg shadow-md p-6 mt-6">
+        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="bg-white rounded-lg shadow-md p-6 mt-6 border border-slate-100">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-bold text-gray-800">Seguridad</h3>
-            <span class="text-2xl"></span>
+            <h3 class="text-lg font-bold text-slate-800">Seguridad</h3>
           </div>
 
-          <p class="text-sm text-gray-500 mb-4">Completa solo si deseas cambiar tu contraseña.</p>
+          <p class="text-sm text-slate-500 mb-4">Completa solo si deseas cambiar tu contraseña.</p>
 
           <div class="grid gap-4 sm:grid-cols-[1.1fr_1.1fr_auto] items-start">
             <div>
-              <label class="block text-sm text-gray-600 mb-1">Contraseña actual</label>
+              <label class="block text-sm text-slate-600 mb-1">Contraseña actual</label>
               <input
                 type="password"
                 [value]="currentPasswordMask"
                 readonly
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed text-sm"
               />
             </div>
             <div>
-              <label class="block text-sm text-gray-600 mb-1">Nueva contraseña</label>
+              <label class="block text-sm text-slate-600 mb-1">Nueva contraseña</label>
               <input
                 type="password"
                 formControlName="newPassword"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                class="w-full px-3 py-2 border border-sky-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                 placeholder="Nueva contraseña"
               />
               <span class="mt-2 block text-xs text-rose-500 min-h-5">
@@ -189,11 +181,11 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
             </div>
 
             <div>
-              <label class="block text-sm text-gray-600 mb-1">Confirmar contraseña</label>
+              <label class="block text-sm text-slate-600 mb-1">Confirmar contraseña</label>
               <input
                 type="password"
                 formControlName="confirmPassword"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                class="w-full px-3 py-2 border border-sky-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                 placeholder="Repite la contraseña"
               />
               <span class="mt-2 block text-xs text-rose-500 min-h-5">
@@ -205,7 +197,7 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
               <button
                 type="submit"
                 [disabled]="passwordForm.invalid || passwordLoading"
-                class="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-2 px-6 rounded-lg transition duration-200"
+                class="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 disabled:bg-slate-400 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
               >
                 {{ passwordLoading ? 'Actualizando...' : 'Cambiar contraseña' }}
               </button>
@@ -218,13 +210,12 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
           </div>
         </form>
 
-        <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-3 mt-6 justify-center">
           <ng-container *ngIf="!editMode">
             <button
               type="button"
               (click)="setEditMode(true)"
-              class="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg transition duration-200"
+              class="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200"
             >
               Editar información
             </button>
@@ -234,7 +225,7 @@ import { UserService, UserProfile, UpdateUserProfileRequest } from '../../servic
             <button
               type="button"
               (click)="onCancel()"
-              class="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-8 rounded-lg transition duration-200"
+              class="w-full sm:w-auto bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-8 rounded-lg transition duration-200"
             >
               ✕ Cancelar
             </button>
@@ -286,7 +277,17 @@ export class ProfileComponent implements OnInit {
     });
 
     this.loadProfile();
-    this.generateAvatar();
+  }
+
+  getDocumentTypeName(code: string): string {
+    const types: { [key: string]: string } = {
+      'CC': 'Cédula de Ciudadanía',
+      'TI': 'Tarjeta de Identidad',
+      'CE': 'Cédula de Extranjería',
+      'PASAPORTE': 'Pasaporte',
+      'NIT': 'NIT'
+    };
+    return types[code] || code || 'N/A';
   }
 
   setUserAvatar(user: any): void {
@@ -295,8 +296,8 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    const firstName = user.name || user.firstName || user.nombre || '';
-    const lastName = user.lastName || user.apellido || '';
+    const firstName = user.name || user.firstName || user.first_name || user.nombre || '';
+    const lastName = user.lastName || user.last_name || user.apellido || '';
     const photo = user.foto || user.photoUrl;
 
     if (photo) {
@@ -304,13 +305,13 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    this.avatarUrl = `https://ui-avatars.com/api/?background=14B8A6&color=ffffff&name=${firstName}+${lastName}&bold=true`;
+    this.avatarUrl = `https://ui-avatars.com/api/?background=0284c7&color=ffffff&name=${firstName}+${lastName}&bold=true`;
   }
 
   generateAvatar(): void {
     const firstName = this.profileForm.get('firstName')?.value || 'U';
     const lastName = this.profileForm.get('lastName')?.value || '';
-    this.avatarUrl = `https://ui-avatars.com/api/?background=14B8A6&color=ffffff&name=${firstName}+${lastName}&bold=true`;
+    this.avatarUrl = `https://ui-avatars.com/api/?background=0284c7&color=ffffff&name=${firstName}+${lastName}&bold=true`;
   }
 
   setEditMode(edit: boolean) {
@@ -327,20 +328,24 @@ export class ProfileComponent implements OnInit {
 
   loadProfile(): void {
     this.userService.getCurrentUser().subscribe({
-      next: (profile: UserProfile) => {
+      next: (profile: any) => {
+        if (!profile) return;
+        
         this.profileForm.patchValue({
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          email: profile.email,
-          phone: profile.phone,
-          identificationType: profile.identificationType,
-          identificationNumber: profile.identificationNumber
+          firstName: profile.firstName || profile.first_name || '',
+          lastName: profile.lastName || profile.last_name || '',
+          email: profile.email || '',
+          phone: profile.phone || '',
+          identificationType: profile.identificationType || profile.identification_type || '',
+          identificationNumber: profile.identificationNumber || profile.identification_number || ''
         });
-        // start in view mode
+        
+        this.generateAvatar();
         this.setEditMode(false);
       },
-      error: () => {
-        this.errorMessage = 'No se pudo cargar tu perfil. Vuelve a intentarlo.';
+      error: (err) => {
+        console.error('Error cargando el perfil:', err);
+        this.errorMessage = 'No se pudo cargar tu perfil. Revisa tu conexión o vuelve a iniciar sesión.';
       }
     });
   }
@@ -363,15 +368,16 @@ export class ProfileComponent implements OnInit {
     };
 
     this.userService.updateCurrentUser(updateRequest).subscribe({
-      next: (updatedUser) => {
+      next: (updatedUser: any) => {
         this.successMessage = 'Perfil actualizado correctamente.';
         this.loading = false;
         this.authService.updateStoredUser({
-          name: updatedUser.firstName,
-          lastName: updatedUser.lastName
+          name: updatedUser.firstName || updatedUser.first_name,
+          lastName: updatedUser.lastName || updatedUser.last_name
         });
         this.savePhotoToStorage();
         this.setEditMode(false);
+        this.generateAvatar();
       },
       error: (error) => {
         this.loading = false;
@@ -438,7 +444,6 @@ export class ProfileComponent implements OnInit {
     if (!this.photoPreview) {
       return;
     }
-
     this.authService.updateStoredUser({ foto: this.photoPreview });
   }
 
@@ -452,15 +457,9 @@ export class ProfileComponent implements OnInit {
 
   private getErrorMessage(error: any, fallback: string): string {
     console.error('Perfil error:', error);
-    if (error?.error?.message) {
-      return error.error.message;
-    }
-    if (typeof error?.error === 'string' && error.error.trim()) {
-      return error.error;
-    }
-    if (error?.message) {
-      return error.message;
-    }
+    if (error?.error?.message) return error.error.message;
+    if (typeof error?.error === 'string' && error.error.trim()) return error.error;
+    if (error?.message) return error.message;
     return fallback;
   }
 }
