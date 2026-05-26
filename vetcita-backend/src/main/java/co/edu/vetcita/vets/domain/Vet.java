@@ -28,10 +28,18 @@ public class Vet {
     private String email;
 
     @Column(nullable = false)
-    private boolean isActive;
+    private Boolean isActive;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        if (this.isActive == null) {
+            this.isActive = true; 
+        }
+    }
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
@@ -43,9 +51,13 @@ public class Vet {
     @EqualsAndHashCode.Exclude
     private Set<Long> serviceIds = new HashSet<>();
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.isActive = true;
-    }
+    @Transient
+    private String password;
+
+    @Transient 
+    private String identificationType;
+
+    @Transient 
+    private String identificationNumber;
+
 }

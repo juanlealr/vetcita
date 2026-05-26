@@ -17,6 +17,9 @@ import { AdminLayoutComponent } from './components/admin-layout/admin-layout.com
 import { ClientListComponent } from './components/admin-clients/client-list.component';
 import { ClientDetailComponent } from './components/admin-clients/client-detail.component';
 import { ClientFormComponent } from './components/admin-clients/client-form.component';
+import { VetListComponent } from './components/admin-vets/vet-list.component'; 
+import { VetDetailComponent } from './components/admin-vets/vet-detail.component'; 
+import { VetFormComponent } from './components/admin-vets/vet-form.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -57,14 +60,21 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: AdminDashboardComponent },
+      
+      // Clientes
       { path: 'clientes', component: ClientListComponent },
       { path: 'clientes/nuevo', component: ClientFormComponent },
       { path: 'clientes/editar/:id', component: ClientFormComponent },
       { path: 'clientes/:id', component: ClientDetailComponent },
       { path: 'clientes/:id/mascotas/nueva', component: PetFormComponent },
       
+      //Veterinarios
+      { path: 'veterinarios', component: VetListComponent },
+      { path: 'veterinarios/nuevo', component: VetFormComponent },
+      { path: 'veterinarios/editar/:id', component: VetFormComponent },
+      { path: 'veterinarios/:id', component: VetDetailComponent },
+
       // { path: 'servicios', component: ServicesListComponent },
-      // { path: 'veterinarios', component: VetListComponent },
       // { path: 'recepcionistas', component: ReceptionistListComponent },
     ]
   },
