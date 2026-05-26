@@ -59,4 +59,9 @@ export class UserService {
   updateClient(id: number, clientData: any): Observable<any> {
     return this.http.put<any>(`${this.API_URL}/${id}`, clientData);
   }
+
+  toggleClientStatus(id: number): Observable<any> {
+    return this.http.patch(`${this.API_URL}/${id}/status`, {});
+  }
+
 }

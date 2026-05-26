@@ -245,6 +245,30 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
     });
   }
 
+  filterValidTimesForToday(times: string[], selectedDate: string): string[] {
+    const today = new Date();
+    
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayString = `${year}-${month}-${day}`;
+
+    if (selectedDate !== todayString) {
+      return times; 
+    }
+
+    const currentHour = today.getHours();
+    const currentMinutes = today.getMinutes();
+    const minAllowedMinutes = (currentHour * 60) + currentMinutes + 120;
+
+    return times.filter(time => {
+      const [hours, minutes] = time.split(':').map(Number);
+      const timeInMinutes = (hours * 60) + minutes;
+      
+      return timeInMinutes >= minAllowedMinutes;
+    });
+  }
+
   ngOnInit(): void {
     this.loadMyPets();
     this.loadServices();
@@ -337,7 +361,8 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
           
           this.appointmentService.getAvailableTimes(vetId, date).subscribe({
             next: (times) => {
-              this.availableTimes = times;
+              this.availableTimes = this.filterValidTimesForToday(times, date);
+              
               this.isLoadingTimes = false;
               this.cdr.detectChanges();
             },

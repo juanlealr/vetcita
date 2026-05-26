@@ -41,4 +41,9 @@ export class AppointmentService {
   cancelAppointment(appointmentId: number): Observable<any> {
     return this.http.put(`${this.baseUrl}/appointments/${appointmentId}/cancel`, {});
   }
+
+  getVetAppointments(vetId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/appointments/vet/${vetId}`);
+  }
+  
 }

@@ -41,4 +41,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             @Param("date") LocalDate date,
             @Param("time") LocalTime time,
             @Param("excludeId") Long excludeId);
+
+        List<Appointment> findByVetIdOrderByAppointmentDateAscAppointmentTimeAsc(Long vetId);
 }

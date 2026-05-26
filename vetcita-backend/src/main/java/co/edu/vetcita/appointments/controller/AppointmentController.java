@@ -60,4 +60,9 @@ public class AppointmentController {
         appointmentService.cancelAppointment(id, token);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/vet/{vetId}")
+    public ResponseEntity<List<AppointmentResponseDTO>> getVetAppointments(@PathVariable Long vetId) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByVet(vetId));
+    }
 }

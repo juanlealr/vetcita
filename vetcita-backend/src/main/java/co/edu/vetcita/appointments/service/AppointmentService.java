@@ -150,4 +150,11 @@ public class AppointmentService {
                 .vetName(vetName)
                 .build();
     }
+
+    public List<AppointmentResponseDTO> getAppointmentsByVet(Long vetId) {
+        return appointmentRepository.findByVetIdOrderByAppointmentDateAscAppointmentTimeAsc(vetId)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
 }

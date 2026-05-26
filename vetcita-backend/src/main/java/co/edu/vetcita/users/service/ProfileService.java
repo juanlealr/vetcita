@@ -88,4 +88,15 @@ public class ProfileService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
     }
+
+    @Transactional
+    public void toggleUserStatus(Long id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            
+        user.setActive(!user.isActive());
+        
+        userRepository.save(user);
+    }
+
 }

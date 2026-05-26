@@ -87,4 +87,10 @@ public class ProfileController {
         User newClient = profileService.createClient(dto);
         return ResponseEntity.ok(UserProfileDTO.from(newClient));
     }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> toggleUserStatus(@PathVariable Long id) {
+        profileService.toggleUserStatus(id);
+        return ResponseEntity.ok().build();
+    }
 }

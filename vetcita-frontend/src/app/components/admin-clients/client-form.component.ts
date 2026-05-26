@@ -91,13 +91,6 @@ import Swal from 'sweetalert2';
               <span *ngIf="isFieldInvalid('phone')" class="text-xs text-red-500 font-medium">Debe empezar por 3 y tener exactamente 10 dígitos numéricos</span>
             </div>
             
-            <div *ngIf="isEditMode" class="flex flex-col gap-1 md:col-span-2">
-              <label class="text-sm font-semibold text-slate-700">Estado de la cuenta</label>
-              <div class="flex items-center gap-2 mt-2">
-                <input type="checkbox" formControlName="active" id="activeState" class="w-5 h-5 text-sky-500 rounded border-slate-300 focus:ring-sky-500 cursor-pointer">
-                <label for="activeState" class="text-slate-600 cursor-pointer select-none">El cliente está activo y puede iniciar sesión</label>
-              </div>
-            </div>
           </div>
 
           <div class="flex justify-end gap-3 pt-6 border-t border-slate-100">
