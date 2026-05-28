@@ -8,6 +8,7 @@ export interface AuthResponse {
   firstName?: string;
   lastName?: string;
   photoUrl?: string;
+  mustChangePassword?: boolean;
 }
 
 export interface LoginRequest {

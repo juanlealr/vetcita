@@ -153,9 +153,14 @@ export class LoginComponent implements OnInit {
     this.loading = true;
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
+      next: (response: any) => {
         this.loading = false;
     
+        if (response.mustChangePassword) {
+           this.router.navigate(['/change-password']); 
+           return;
+        }
+
         const role = this.authService.getUserRole();
 
         if (role === 'ROLE_CLIENT' || role === 'CLIENT') {

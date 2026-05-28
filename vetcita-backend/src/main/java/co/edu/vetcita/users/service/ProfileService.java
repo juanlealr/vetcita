@@ -3,11 +3,15 @@ package co.edu.vetcita.users.service;
 import co.edu.vetcita.users.domain.Role;
 import co.edu.vetcita.users.domain.User;
 import co.edu.vetcita.users.dto.CreateClientRequestDTO;
+import co.edu.vetcita.users.dto.RegisterRequestDTO;
 import co.edu.vetcita.users.dto.UpdateProfileDTO;
+import co.edu.vetcita.users.dto.UserProfileDTO;
 import co.edu.vetcita.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +22,7 @@ public class ProfileService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService; // Inyectamos el servicio de correo
+    private final EmailService emailService;
 
     public User getByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -97,6 +101,36 @@ public class ProfileService {
         user.setActive(!user.isActive());
         
         userRepository.save(user);
+    }
+
+    public List<UserProfileDTO> getAllReceptionists() {
+        List<User> receptionists = userRepository.findByRole(Role.RECEPTIONIST);
+        return receptionists.stream()
+                .map(UserProfileDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public UserProfileDTO createReceptionist(RegisterRequestDTO dto) {
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("El correo electrónico ya se encuentra registrado");
+        }
+
+        var receptionist = User.builder()
+                .firstName(dto.getFirstName())
+                .lastName(dto.getLastName())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .identificationType(dto.getIdentificationType())
+                .identificationNumber(dto.getIdentificationNumber())
+                .role(Role.RECEPTIONIST)
+                .active(true)
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .mustChangePassword(true)
+                .build();
+
+        User saved = userRepository.save(receptionist);
+        return UserProfileDTO.from(saved);
     }
 
 }

@@ -20,6 +20,10 @@ import { ClientFormComponent } from './components/admin-clients/client-form.comp
 import { VetListComponent } from './components/admin-vets/vet-list.component'; 
 import { VetDetailComponent } from './components/admin-vets/vet-detail.component'; 
 import { VetFormComponent } from './components/admin-vets/vet-form.component';
+import { ReceptionistListComponent } from './components/admin-receptionists/receptionist-list.component';
+import { ReceptionistFormComponent } from './components/admin-receptionists/receptionist-form.component';
+import { ReceptionistDetailComponent } from './components/admin-receptionists/receptionist-detail.component';
+//import { ReceptionistFormComponent } from './components/admin-receptionists/receptionist-form.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -74,8 +78,14 @@ export const routes: Routes = [
       { path: 'veterinarios/editar/:id', component: VetFormComponent },
       { path: 'veterinarios/:id', component: VetDetailComponent },
 
+      // ==========================================
+      // RECEPCIONISTAS
+      // ==========================================
+      { path: 'recepcionistas', component: ReceptionistListComponent },
+      { path: 'recepcionistas/nuevo', component: ReceptionistFormComponent },
+      { path: 'recepcionistas/editar/:id', component: ReceptionistFormComponent },
+      { path: 'recepcionistas/:id', component: ReceptionistDetailComponent },
       // { path: 'servicios', component: ServicesListComponent },
-      // { path: 'recepcionistas', component: ReceptionistListComponent },
     ]
   },
 

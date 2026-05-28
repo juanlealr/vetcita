@@ -4,6 +4,7 @@ import co.edu.vetcita.users.domain.Role;
 import co.edu.vetcita.users.domain.User;
 import co.edu.vetcita.users.dto.ChangePasswordDTO;
 import co.edu.vetcita.users.dto.CreateClientRequestDTO;
+import co.edu.vetcita.users.dto.RegisterRequestDTO;
 import co.edu.vetcita.users.dto.UpdateProfileDTO;
 import co.edu.vetcita.users.dto.UserProfileDTO;
 import co.edu.vetcita.users.service.ProfileService;
@@ -12,7 +13,10 @@ import co.edu.vetcita.pets.PetModuleApi;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,5 +96,19 @@ public class ProfileController {
     public ResponseEntity<Void> toggleUserStatus(@PathVariable Long id) {
         profileService.toggleUserStatus(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/receptionists")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserProfileDTO>> getAllReceptionists() {
+        List<UserProfileDTO> receptionists = profileService.getAllReceptionists();
+        return ResponseEntity.ok(receptionists);
+    }
+
+    @PostMapping("/receptionists")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserProfileDTO> createReceptionist(@RequestBody RegisterRequestDTO request) {
+        UserProfileDTO newReceptionist = profileService.createReceptionist(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newReceptionist);
     }
 }
