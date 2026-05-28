@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -231,7 +231,8 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
     private router: Router,
     private petService: PetService,
     private appointmentService: AppointmentService,
-    private cdr: ChangeDetectorRef 
+    private cdr: ChangeDetectorRef,
+    private location: Location
   ) {
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0];
@@ -409,7 +410,7 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
   }
 
   goToAppointments() {
-    this.router.navigate(['/client/citas']);
+    this.location.back();
   }
 
   isStep2Valid(): boolean {

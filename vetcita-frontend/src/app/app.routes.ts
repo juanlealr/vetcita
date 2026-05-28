@@ -23,7 +23,8 @@ import { VetFormComponent } from './components/admin-vets/vet-form.component';
 import { ReceptionistListComponent } from './components/admin-receptionists/receptionist-list.component';
 import { ReceptionistFormComponent } from './components/admin-receptionists/receptionist-form.component';
 import { ReceptionistDetailComponent } from './components/admin-receptionists/receptionist-detail.component';
-//import { ReceptionistFormComponent } from './components/admin-receptionists/receptionist-form.component';
+import { ServicesListComponent } from './components/admin-services/services-list.component';
+import { ServicesFormComponent } from './components/admin-services/services-form.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -85,7 +86,13 @@ export const routes: Routes = [
       { path: 'recepcionistas/nuevo', component: ReceptionistFormComponent },
       { path: 'recepcionistas/editar/:id', component: ReceptionistFormComponent },
       { path: 'recepcionistas/:id', component: ReceptionistDetailComponent },
-      // { path: 'servicios', component: ServicesListComponent },
+      
+      // ==========================================
+      // SERVICIOS MÉDICOS
+      // ==========================================
+      { path: 'servicios', component: ServicesListComponent },
+      { path: 'servicios/nuevo', component: ServicesFormComponent },
+      { path: 'servicios/editar/:id', component: ServicesFormComponent },
     ]
   },
 

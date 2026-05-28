@@ -5,10 +5,12 @@ import co.edu.vetcita.appointments.domain.AppointmentStatus;
 import co.edu.vetcita.appointments.dto.AppointmentRequestDTO;
 import co.edu.vetcita.appointments.dto.AppointmentResponseDTO;
 import co.edu.vetcita.appointments.dto.AppointmentUpdateDTO;
+import co.edu.vetcita.appointments.dto.DashboardMetricsDTO;
 import co.edu.vetcita.appointments.repository.AppointmentRepository;
 import co.edu.vetcita.pets.PetModuleApi;
 import co.edu.vetcita.pets.PetInfo;
 import co.edu.vetcita.services.MedicalServiceModuleApi;
+import co.edu.vetcita.users.UserServiceApi;
 import co.edu.vetcita.vets.VetModuleApi;
 import co.edu.vetcita.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ public class AppointmentService {
     private final PetModuleApi petModuleApi;
     private final MedicalServiceModuleApi medicalServiceModuleApi;
     private final VetModuleApi vetModuleApi;
+    private final UserServiceApi userServiceApi;
 
     private static final List<LocalTime> STANDARD_TIME_SLOTS = List.of(
             LocalTime.of(8, 0), LocalTime.of(9, 0), LocalTime.of(10, 0), LocalTime.of(11, 0),
@@ -156,5 +159,27 @@ public class AppointmentService {
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
+    }
+
+    public DashboardMetricsDTO getAdminDashboardMetrics() {
+        long citasHoy = appointmentRepository.countAppointmentsToday();
+        long proximas = appointmentRepository.countUpcomingAppointments();
+        
+        long totalClientes = userServiceApi.countTotalClients();
+        long totalMascotas = petModuleApi.countTotalPets();     
+
+        List<AppointmentResponseDTO> ultimasCitas = appointmentRepository
+                .findTop5ByStatusNotOrderByAppointmentDateDescAppointmentTimeDesc(AppointmentStatus.CANCELLED)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+
+        return DashboardMetricsDTO.builder()
+                .citasDelDia(citasHoy)
+                .proximasCitas(proximas)
+                .totalClientes(totalClientes)
+                .totalMascotas(totalMascotas)
+                .ultimasCitas(ultimasCitas)
+                .build();
     }
 }

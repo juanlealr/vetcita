@@ -38,4 +38,9 @@ public class UserServiceApi {
 
         userRepository.save(newUser);
     }
+
+    public long countTotalClients() {
+        return userRepository.countByRole(Role.CLIENT); 
+    }
+
 }

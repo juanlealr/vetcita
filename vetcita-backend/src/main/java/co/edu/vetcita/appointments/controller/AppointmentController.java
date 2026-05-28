@@ -3,6 +3,7 @@ package co.edu.vetcita.appointments.controller;
 import co.edu.vetcita.appointments.dto.AppointmentRequestDTO;
 import co.edu.vetcita.appointments.dto.AppointmentResponseDTO;
 import co.edu.vetcita.appointments.dto.AppointmentUpdateDTO;
+import co.edu.vetcita.appointments.dto.DashboardMetricsDTO;
 import co.edu.vetcita.appointments.service.AppointmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,5 +65,11 @@ public class AppointmentController {
     @GetMapping("/vet/{vetId}")
     public ResponseEntity<List<AppointmentResponseDTO>> getVetAppointments(@PathVariable Long vetId) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByVet(vetId));
+    }
+
+    @GetMapping("/admin/dashboard-metrics")
+    public ResponseEntity<DashboardMetricsDTO> getDashboardMetrics(
+            @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(appointmentService.getAdminDashboardMetrics());
     }
 }
