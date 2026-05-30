@@ -36,7 +36,11 @@ import Swal from 'sweetalert2';
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('name'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('name')}"
                 placeholder="Ej. Dra. María Gómez">
-              <span *ngIf="isFieldInvalid('name')" class="text-xs text-red-500 font-medium">El nombre es requerido y solo debe contener letras</span>
+              <div *ngIf="isFieldInvalid('name')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="vetForm.get('name')?.hasError('required')">El nombre es requerido.</span>
+                <span *ngIf="vetForm.get('name')?.hasError('minlength')">Debe tener al menos 3 caracteres.</span>
+                <span *ngIf="vetForm.get('name')?.hasError('pattern')">Solo se permiten letras.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1" *ngIf="!isEditMode">
@@ -49,17 +53,20 @@ import Swal from 'sweetalert2';
                 <option value="CE">Cédula de Extranjería</option>
                 <option value="PASSPORT">Pasaporte</option>
               </select>
-              <span *ngIf="isFieldInvalid('identificationType')" class="text-xs text-red-500 font-medium">Seleccione el tipo de documento</span>
+              <div *ngIf="isFieldInvalid('identificationType')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="vetForm.get('identificationType')?.hasError('required')">Seleccione un tipo de documento.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1" *ngIf="!isEditMode">
               <label class="text-sm font-semibold text-slate-700">Número de Documento *</label>
               <input type="text" formControlName="identificationNumber" 
-                (input)="allowOnlyNumbers($event, 'identificationNumber')"
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('identificationNumber'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('identificationNumber')}"
                 placeholder="Ej. 1020304050">
-              <span *ngIf="isFieldInvalid('identificationNumber')" class="text-xs text-red-500 font-medium">Ingrese un número de documento válido</span>
+              <div *ngIf="isFieldInvalid('identificationNumber')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="vetForm.get('identificationNumber')?.hasError('required')">El número de documento es requerido.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1" [ngClass]="{'md:col-span-1': !isEditMode, 'md:col-span-2': isEditMode}">
@@ -75,7 +82,9 @@ import Swal from 'sweetalert2';
                 <option value="Odontología">Odontología</option>
                 <option value="Cardiología">Cardiología</option>
               </select>
-              <span *ngIf="isFieldInvalid('specialty')" class="text-xs text-red-500 font-medium">Seleccione una especialidad</span>
+              <div *ngIf="isFieldInvalid('specialty')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="vetForm.get('specialty')?.hasError('required')">Seleccione una especialidad.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1 md:col-span-2">
@@ -85,7 +94,10 @@ import Swal from 'sweetalert2';
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('phone'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('phone')}"
                 placeholder="Ej. 3001234567">
-              <span *ngIf="isFieldInvalid('phone')" class="text-xs text-red-500 font-medium">Ingrese un número de 10 dígitos</span>
+              <div *ngIf="isFieldInvalid('phone')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="vetForm.get('phone')?.hasError('required')">El teléfono es requerido.</span>
+                <span *ngIf="vetForm.get('phone')?.hasError('pattern')">Debe empezar con 3 y tener exactamente 10 dígitos.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1 md:col-span-2">
@@ -94,7 +106,10 @@ import Swal from 'sweetalert2';
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('email'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('email')}"
                 placeholder="doctor@vetcita.com">
-              <span *ngIf="isFieldInvalid('email')" class="text-xs text-red-500 font-medium">Ingrese un correo electrónico válido</span>
+              <div *ngIf="isFieldInvalid('email')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="vetForm.get('email')?.hasError('required')">El correo es requerido.</span>
+                <span *ngIf="vetForm.get('email')?.hasError('email')">Ingrese un formato de correo válido.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1 md:col-span-2" *ngIf="!isEditMode">
@@ -103,7 +118,10 @@ import Swal from 'sweetalert2';
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('password'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('password')}"
                 placeholder="Mínimo 6 caracteres">
-              <span *ngIf="isFieldInvalid('password')" class="text-xs text-red-500 font-medium">La contraseña es requerida (mínimo 6 caracteres)</span>
+              <div *ngIf="isFieldInvalid('password')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="vetForm.get('password')?.hasError('required')">La contraseña es requerida.</span>
+                <span *ngIf="vetForm.get('password')?.hasError('minlength')">Debe tener un mínimo de 6 caracteres.</span>
+              </div>
             </div>
             
             <div class="flex flex-col gap-2 md:col-span-2 pt-4 border-t border-slate-100">
@@ -130,7 +148,7 @@ import Swal from 'sweetalert2';
               </ng-template>
             </div>
 
-            <div *ngIf="isEditMode" class="flex flex-col gap-1 md:col-span-2 pt-4">
+            <div *ngIf="isEditMode" class="flex flex-col gap-1 md:col-span-2 pt-4 border-t border-slate-100">
               <label class="text-sm font-semibold text-slate-700">Estado en el sistema</label>
               <div class="flex items-center gap-2 mt-2">
                 <input type="checkbox" formControlName="active" id="activeState" class="w-5 h-5 text-[#0C7489] rounded border-slate-300 focus:ring-[#0C7489] cursor-pointer">
@@ -176,7 +194,7 @@ export class VetFormComponent implements OnInit {
       identificationNumber: [''],
       specialty: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]], 
+      phone: ['', [Validators.required, Validators.pattern('^3[0-9]{9}$')]], 
       password: [''],
       active: [true],
       serviceIds: [[]]
@@ -199,7 +217,7 @@ export class VetFormComponent implements OnInit {
         this.loadVetData(this.vetId);
       } else {
         this.vetForm.get('identificationType')?.setValidators([Validators.required]);
-        this.vetForm.get('identificationNumber')?.setValidators([Validators.required, Validators.pattern('^[0-9]+$')]);
+        this.vetForm.get('identificationNumber')?.setValidators([Validators.required]);
         this.vetForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
       }
       

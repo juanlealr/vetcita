@@ -34,7 +34,11 @@ import Swal from 'sweetalert2';
                 (input)="allowOnlyLetters($event, 'firstName')"
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('firstName'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('firstName')}">
-              <span *ngIf="isFieldInvalid('firstName')" class="text-xs text-red-500 font-medium">El nombre es requerido</span>
+              <div *ngIf="isFieldInvalid('firstName')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="repForm.get('firstName')?.hasError('required')">El nombre es requerido.</span>
+                <span *ngIf="repForm.get('firstName')?.hasError('minlength')">Debe tener al menos 3 caracteres.</span>
+                <span *ngIf="repForm.get('firstName')?.hasError('pattern')">Solo se permiten letras.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1">
@@ -43,7 +47,11 @@ import Swal from 'sweetalert2';
                 (input)="allowOnlyLetters($event, 'lastName')"
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('lastName'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('lastName')}">
-              <span *ngIf="isFieldInvalid('lastName')" class="text-xs text-red-500 font-medium">El apellido es requerido</span>
+              <div *ngIf="isFieldInvalid('lastName')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="repForm.get('lastName')?.hasError('required')">El apellido es requerido.</span>
+                <span *ngIf="repForm.get('lastName')?.hasError('minlength')">Debe tener al menos 3 caracteres.</span>
+                <span *ngIf="repForm.get('lastName')?.hasError('pattern')">Solo se permiten letras.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1" *ngIf="!isEditMode">
@@ -56,14 +64,19 @@ import Swal from 'sweetalert2';
                 <option value="CE">Cédula de Extranjería</option>
                 <option value="PASSPORT">Pasaporte</option>
               </select>
+              <div *ngIf="isFieldInvalid('identificationType')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="repForm.get('identificationType')?.hasError('required')">Seleccione un tipo de documento.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1" *ngIf="!isEditMode">
               <label class="text-sm font-semibold text-slate-700">Número de Documento *</label>
               <input type="text" formControlName="identificationNumber" 
-                (input)="allowOnlyNumbers($event, 'identificationNumber')"
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('identificationNumber'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('identificationNumber')}">
+              <div *ngIf="isFieldInvalid('identificationNumber')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="repForm.get('identificationNumber')?.hasError('required')">El número de documento es requerido.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1 md:col-span-2">
@@ -72,6 +85,10 @@ import Swal from 'sweetalert2';
                 (input)="allowOnlyNumbers($event, 'phone')"
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('phone'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('phone')}">
+              <div *ngIf="isFieldInvalid('phone')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="repForm.get('phone')?.hasError('required')">El teléfono es requerido.</span>
+                <span *ngIf="repForm.get('phone')?.hasError('pattern')">Debe empezar con 3 y tener exactamente 10 dígitos.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1 md:col-span-2">
@@ -79,6 +96,10 @@ import Swal from 'sweetalert2';
               <input type="email" formControlName="email" 
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('email'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('email')}">
+              <div *ngIf="isFieldInvalid('email')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="repForm.get('email')?.hasError('required')">El correo es requerido.</span>
+                <span *ngIf="repForm.get('email')?.hasError('email')">Ingrese un formato de correo válido.</span>
+              </div>
             </div>
 
             <div class="flex flex-col gap-1 md:col-span-2" *ngIf="!isEditMode">
@@ -87,6 +108,10 @@ import Swal from 'sweetalert2';
                 class="w-full px-4 py-3 rounded-xl border bg-slate-50 focus:outline-none focus:bg-white transition"
                 [ngClass]="{'border-red-400': isFieldInvalid('password'), 'border-slate-200 focus:border-sky-400': !isFieldInvalid('password')}"
                 placeholder="El usuario podrá cambiarla después">
+              <div *ngIf="isFieldInvalid('password')" class="text-xs text-red-500 font-medium">
+                <span *ngIf="repForm.get('password')?.hasError('required')">La contraseña es requerida.</span>
+                <span *ngIf="repForm.get('password')?.hasError('minlength')">Debe tener un mínimo de 6 caracteres.</span>
+              </div>
             </div>
 
             <div *ngIf="isEditMode" class="flex flex-col gap-1 md:col-span-2 pt-4 border-t border-slate-100">
@@ -132,7 +157,7 @@ export class ReceptionistFormComponent implements OnInit {
       identificationType: [''],
       identificationNumber: [''],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]], 
+      phone: ['', [Validators.required, Validators.pattern('^3[0-9]{9}$')]], 
       password: [''],
       active: [true]
     });
@@ -152,7 +177,7 @@ export class ReceptionistFormComponent implements OnInit {
         this.loadReceptionistData(this.repId);
       } else {
         this.repForm.get('identificationType')?.setValidators([Validators.required]);
-        this.repForm.get('identificationNumber')?.setValidators([Validators.required, Validators.pattern('^[0-9]+$')]);
+        this.repForm.get('identificationNumber')?.setValidators([Validators.required]);
         this.repForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
       }
       
