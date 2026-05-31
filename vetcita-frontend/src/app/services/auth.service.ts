@@ -39,12 +39,11 @@ export interface ChangePasswordRequest {
   newPassword: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly API_URL = 'http://localhost:8080/api/auth';
   private readonly USER_API_URL = 'http://localhost:8080/api/users';
+  
   private tokenSubject = new BehaviorSubject<string | null>(this.getToken());
   public token$ = this.tokenSubject.asObservable();
 
@@ -53,12 +52,14 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  // ================================
+  // LOGIN Y REGISTRO
+  // ================================
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, request).pipe(
       tap((response) => {
         if (response.token) {
           this.setToken(response.token);
-          
           const userData = {
             name: response.firstName,
             lastName: response.lastName,
@@ -75,6 +76,9 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.API_URL}/register`, request);
   }
 
+  // ================================
+  // RECUPERACIÓN DE CONTRASEÑA
+  // ================================
   forgotPassword(request: ForgotPasswordRequest): Observable<string> {
     return this.http.post(`${this.API_URL}/forgot-password`, request, {
       responseType: 'text'
@@ -87,12 +91,18 @@ export class AuthService {
     });
   }
 
+  // ================================
+  // CAMBIO DE CONTRASEÑA (usuarios autenticados)
+  // ================================
   changePassword(request: ChangePasswordRequest): Observable<string> {
     return this.http.post(`${this.USER_API_URL}/me/change-password`, request, {
       responseType: 'text'
     });
   }
 
+  // ================================
+  // TOKEN Y ALMACENAMIENTO
+  // ================================
   setToken(token: string): void {
     localStorage.setItem('auth_token', token);
     this.tokenSubject.next(token);
@@ -100,20 +110,13 @@ export class AuthService {
 
   getToken(): string | null {
     const token = localStorage.getItem('auth_token');
-    
-    if (token === 'null' || token === 'undefined' || token === '') {
-      return null;
-    }
-    
+    if (token === 'null' || token === 'undefined' || token === '') return null;
     return token;
   }
 
   getStoredUser(): any {
     const userString = localStorage.getItem('usuario');
-    if (!userString) {
-      return null;
-    }
-
+    if (!userString) return null;
     try {
       return JSON.parse(userString);
     } catch {
@@ -128,15 +131,16 @@ export class AuthService {
     this.currentUserSubject.next(newUser);
   }
 
+  // ================================
+  // OBTENER ROL Y USER ID DESDE TOKEN
+  // ================================
   getUserRole(): string | null {
     const token = this.getToken();
     if (!token) return null;
-
     try {
       const payload = token.split('.')[1];
       const decodedPayload = JSON.parse(atob(payload));
-
-      return decodedPayload.role || null; 
+      return decodedPayload.role || null;
     } catch (e) {
       console.error('Error decodificando token', e);
       return null;
@@ -146,26 +150,38 @@ export class AuthService {
   getUserId(): number | null {
     const token = this.getToken();
     if (!token) return null;
-
     try {
       const payload = token.split('.')[1];
       const decodedPayload = JSON.parse(atob(payload));
-      return decodedPayload.userId || null; 
+      return decodedPayload.userId || null;
     } catch (e) {
       console.error('Error obteniendo el ID del usuario', e);
       return null;
     }
   }
 
+  // ================================
+  // ESTADO DE AUTENTICACIÓN
+  // ================================
   isAuthenticated(): boolean {
     const token = this.getToken();
-    const isAuth = token !== null;
-    return isAuth;
+    if (!token) return false;
+    try {
+      const payload = token.split('.')[1];
+      const decoded = JSON.parse(atob(payload));
+      if (decoded.exp) {
+        const expDate = new Date(decoded.exp * 1000);
+        return expDate > new Date();
+      }
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   logout(): void {
     localStorage.removeItem('auth_token');
-    localStorage.removeItem('usuario'); 
+    localStorage.removeItem('usuario');
     this.tokenSubject.next(null);
     this.currentUserSubject.next(null);
   }

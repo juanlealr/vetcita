@@ -12,106 +12,89 @@ import { ClientLayoutComponent } from './components/client-layout/client-layout.
 import { AppointmentsComponent } from './components/appointments/appointments.component';
 import { PetFormComponent } from './components/pets/pet-form/pet-form.component';
 import { PetListComponent } from './components/pets/pet-list/pet-list.component';
-import { ScheduleAppointmentComponent } from './components/appointments/schedule-appointment.component'; 
+import { ScheduleAppointmentComponent } from './components/appointments/schedule-appointment.component';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { ClientListComponent } from './components/admin-clients/client-list.component';
 import { ClientDetailComponent } from './components/admin-clients/client-detail.component';
 import { ClientFormComponent } from './components/admin-clients/client-form.component';
-import { VetListComponent } from './components/admin-vets/vet-list.component'; 
-import { VetDetailComponent } from './components/admin-vets/vet-detail.component'; 
+import { VetListComponent } from './components/admin-vets/vet-list.component';
+import { VetDetailComponent } from './components/admin-vets/vet-detail.component';
 import { VetFormComponent } from './components/admin-vets/vet-form.component';
 import { ReceptionistListComponent } from './components/admin-receptionists/receptionist-list.component';
 import { ReceptionistFormComponent } from './components/admin-receptionists/receptionist-form.component';
 import { ReceptionistDetailComponent } from './components/admin-receptionists/receptionist-detail.component';
 import { ServicesListComponent } from './components/admin-services/services-list.component';
 import { ServicesFormComponent } from './components/admin-services/services-form.component';
+import { roleGuard } from './guards/role.guard';
+import { VetLayoutComponent } from './components/vet/vet-layout.component';
+import { VetAppointmentsComponent } from './components/vet/vet-appointments.component';
+import { PetMedicalHistoryComponent } from './components/vet/pet-medical-history.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  
-  { 
-    path: 'login', 
-    component: LoginComponent,
-    canActivate: [publicGuard]
-  },
-  { 
-    path: 'register', 
-    component: RegisterComponent,
-    canActivate: [publicGuard]
-  },
-  { 
-    path: 'forgot-password', 
-    component: ForgotPasswordComponent,
-    canActivate: [publicGuard]
-  },
-  { 
-    path: 'reset-password', 
-    component: ResetPasswordComponent,
-    canActivate: [publicGuard] 
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [authGuard]
-  },
-  
-  // ==========================================
-  // RUTAS DEL ADMINISTRADOR
-  // ==========================================
+
+  { path: 'login', component: LoginComponent, canActivate: [publicGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [publicGuard] },
+  { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [publicGuard] },
+  { path: 'reset-password', component: ResetPasswordComponent, canActivate: [publicGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+
+  // ADMIN
   {
     path: 'admin',
     component: AdminLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN'] },
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: AdminDashboardComponent },
-      
-      // Clientes
       { path: 'clientes', component: ClientListComponent },
       { path: 'clientes/nuevo', component: ClientFormComponent },
       { path: 'clientes/editar/:id', component: ClientFormComponent },
       { path: 'clientes/:id', component: ClientDetailComponent },
       { path: 'clientes/:id/mascotas/nueva', component: PetFormComponent },
-      
-      //Veterinarios
       { path: 'veterinarios', component: VetListComponent },
       { path: 'veterinarios/nuevo', component: VetFormComponent },
       { path: 'veterinarios/editar/:id', component: VetFormComponent },
       { path: 'veterinarios/:id', component: VetDetailComponent },
-
-      // ==========================================
-      // RECEPCIONISTAS
-      // ==========================================
       { path: 'recepcionistas', component: ReceptionistListComponent },
       { path: 'recepcionistas/nuevo', component: ReceptionistFormComponent },
       { path: 'recepcionistas/editar/:id', component: ReceptionistFormComponent },
       { path: 'recepcionistas/:id', component: ReceptionistDetailComponent },
-      
-      // ==========================================
-      // SERVICIOS MÉDICOS
-      // ==========================================
       { path: 'servicios', component: ServicesListComponent },
       { path: 'servicios/nuevo', component: ServicesFormComponent },
-      { path: 'servicios/editar/:id', component: ServicesFormComponent },
+      { path: 'servicios/editar/:id', component: ServicesFormComponent }
     ]
   },
 
-  // ==========================================
-  // RUTAS DEL CLIENTE FINAL
-  // ==========================================
+  // CLIENTE
   {
     path: 'client',
     component: ClientLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['CLIENT'] },
     children: [
       { path: '', redirectTo: 'citas', pathMatch: 'full' },
       { path: 'citas', component: AppointmentsComponent },
-      { path: 'mascotas', component: PetListComponent }, 
+      { path: 'mascotas', component: PetListComponent },
       { path: 'mascotas/nueva', component: PetFormComponent },
       { path: 'perfil', component: ProfileComponent },
-      { path: 'agendar', component: ScheduleAppointmentComponent },
+      { path: 'agendar', component: ScheduleAppointmentComponent }
     ]
   },
-  
-  { path: '**', redirectTo: '' } 
+
+  // VETERINARIO
+  {
+    path: 'vet',
+    component: VetLayoutComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['VET'] },
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: VetAppointmentsComponent },
+      { path: 'medical-history/:petId', component: PetMedicalHistoryComponent }
+    ]
+  },
+
+  { path: '**', redirectTo: '' }
 ];

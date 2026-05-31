@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -62,9 +63,14 @@ public class AppointmentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/vet/{vetId}")
-    public ResponseEntity<List<AppointmentResponseDTO>> getVetAppointments(@PathVariable Long vetId) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByVet(vetId));
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> updateAppointmentStatus(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> payload,
+            @RequestHeader("Authorization") String token) {
+        String newStatus = payload.get("status");
+        appointmentService.updateAppointmentStatus(id, newStatus, token);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/admin/dashboard-metrics")

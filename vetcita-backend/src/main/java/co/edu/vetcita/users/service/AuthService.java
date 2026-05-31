@@ -11,6 +11,8 @@ import co.edu.vetcita.users.dto.RegisterRequestDTO;
 import co.edu.vetcita.users.dto.ResetPasswordRequestDTO;
 import co.edu.vetcita.users.repository.PasswordResetTokenRepository;
 import co.edu.vetcita.users.repository.UserRepository;
+import co.edu.vetcita.vets.domain.Vet;
+import co.edu.vetcita.vets.repository.VetRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -31,6 +33,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordResetTokenRepository tokenRepository;
     private final EmailService emailService;
+    private final VetRepository vetRepository;
 
     public AuthResponseDTO register(RegisterRequestDTO request) {
         
@@ -71,8 +74,16 @@ public class AuthService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
 
+        Long userIdClaim = user.getId();
+        
+        if (user.getRole() == Role.VET) {
+            Vet vet = vetRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new RuntimeException("Veterinario no encontrado para el email: " + request.getEmail()));
+            userIdClaim = vet.getId();
+        }
+
         Map<String, Object> extraClaims = Map.of(
-            "userId", user.getId(),
+            "userId", userIdClaim,
             "role", user.getRole().name()
         );
         var jwtToken = jwtService.generateToken(extraClaims, user);
@@ -81,7 +92,7 @@ public class AuthService {
                 .token(jwtToken)
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .mustChangePassword(user.isMustChangePassword()) // NUEVO: Mapeo de la bandera
+                .mustChangePassword(user.isMustChangePassword())
                 .build();
     }
 

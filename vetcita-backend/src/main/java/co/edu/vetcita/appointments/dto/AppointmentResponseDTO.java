@@ -21,4 +21,6 @@ public class AppointmentResponseDTO {
     private String petSpecies;
     private String serviceName;
     private String vetName;
+    private String clientName;
+    private String clientPhone;
 }

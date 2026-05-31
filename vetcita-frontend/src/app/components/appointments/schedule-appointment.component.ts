@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { PetService, Pet } from '../../services/pet.service';
-import { AppointmentService } from '../../services/appointment.service';
+import { AppointmentService, Service, Vet } from '../../services/appointment.service';
 
 @Component({
   selector: 'app-schedule-appointment',
@@ -220,8 +220,8 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
   minDate: string;
   myPets: Pet[] = [];
   
-  availableServices: any[] = [];
-  availableVets: any[] = [];
+  availableServices: Service[] = [];
+  availableVets: Vet[] = [];
   availableTimes: string[] = [];
 
   private subscriptions: Subscription = new Subscription();
@@ -248,11 +248,7 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
 
   filterValidTimesForToday(times: string[], selectedDate: string): string[] {
     const today = new Date();
-    
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const todayString = `${year}-${month}-${day}`;
+    const todayString = today.toISOString().split('T')[0];
 
     if (selectedDate !== todayString) {
       return times; 
@@ -265,7 +261,6 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
     return times.filter(time => {
       const [hours, minutes] = time.split(':').map(Number);
       const timeInMinutes = (hours * 60) + minutes;
-      
       return timeInMinutes >= minAllowedMinutes;
     });
   }
@@ -298,7 +293,7 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
 
   loadServices() {
     this.appointmentService.getServices().subscribe({
-      next: (services) => {
+      next: (services: Service[]) => {
         this.availableServices = services;
         this.cdr.detectChanges();
       },
@@ -326,7 +321,7 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
         
         if (serviceId) {
           this.appointmentService.getVetsByService(serviceId).subscribe({
-            next: (vets) => {
+            next: (vets: Vet[]) => {
               this.availableVets = vets;
               this.cdr.detectChanges();
             },
@@ -363,7 +358,6 @@ export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
           this.appointmentService.getAvailableTimes(vetId, date).subscribe({
             next: (times) => {
               this.availableTimes = this.filterValidTimesForToday(times, date);
-              
               this.isLoadingTimes = false;
               this.cdr.detectChanges();
             },

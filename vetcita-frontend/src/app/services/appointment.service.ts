@@ -1,49 +1,67 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+export interface Service {
+  id: number;
+  name: string;
+  description?: string;
+  price?: number;
+  estimatedDurationMinutes?: number;
+}
+
+export interface Vet {
+  id: number;
+  name: string;
+  specialty: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class AppointmentService {
-  private baseUrl = 'http://localhost:8080/api';
+  private API_URL = 'http://localhost:8080/api/appointments';
+  private SERVICES_URL = 'http://localhost:8080/api/services';
+  private VETS_URL = 'http://localhost:8080/api/vets';
 
   constructor(private http: HttpClient) {}
 
-  createAppointment(appointmentData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/appointments`, appointmentData);
-  }
-
-  updateAppointment(id: number, data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/appointments/${id}`, data);
-  }
-
-  getServices(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/services`);
-  }
-
-  getVetsByService(serviceId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/vets/service/${serviceId}`);
-  }
-
-  getAvailableTimes(vetId: number, date: string): Observable<string[]> {
-    const params = new HttpParams()
-      .set('vetId', vetId.toString())
-      .set('date', date);
-
-    return this.http.get<string[]>(`${this.baseUrl}/appointments/available-times`, { params });
+  // ========== CITAS ==========
+  createAppointment(data: any): Observable<any> {
+    return this.http.post(`${this.API_URL}`, data);
   }
 
   getMyAppointments(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/appointments/my-appointments`);
-  }
-
-  cancelAppointment(appointmentId: number): Observable<any> {
-    return this.http.put(`${this.baseUrl}/appointments/${appointmentId}/cancel`, {});
+    return this.http.get<any[]>(`${this.API_URL}/my-appointments`);
   }
 
   getVetAppointments(vetId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/appointments/vet/${vetId}`);
+    return this.http.get<any[]>(`${this.API_URL}/vet/${vetId}`);
   }
-  
+
+  getAvailableTimes(vetId: number, date: string, excludeAppointmentId?: number): Observable<string[]> {
+    let url = `${this.API_URL}/available-times?vetId=${vetId}&date=${date}`;
+    if (excludeAppointmentId) url += `&excludeAppointmentId=${excludeAppointmentId}`;
+    return this.http.get<string[]>(url);
+  }
+
+  updateAppointment(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.API_URL}/${id}`, data);
+  }
+
+  cancelAppointment(id: number): Observable<any> {
+    return this.http.put(`${this.API_URL}/${id}/cancel`, {});
+  }
+
+  updateAppointmentStatus(id: number, status: string): Observable<any> {
+    return this.http.patch(`${this.API_URL}/${id}/status`, { status });
+  }
+
+  // ========== SERVICIOS ==========
+  getServices(): Observable<Service[]> {
+    return this.http.get<Service[]>(this.SERVICES_URL);
+  }
+
+  // ========== VETERINARIOS ==========
+  getVetsByService(serviceId: number): Observable<Vet[]> {
+    return this.http.get<Vet[]>(`${this.VETS_URL}/service/${serviceId}`);
+  }
 }

@@ -1,3 +1,4 @@
+// src/app/components/home/home.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -98,11 +99,14 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
       const role = this.authService.getUserRole();
-      
-      if (role === 'ROLE_CLIENT' || role === 'CLIENT') {
-         this.router.navigate(['/client/citas']);
+      // Redirigir según el rol
+      if (role === 'VET' || role === 'ROLE_VET') {
+        this.router.navigate(['/vet/dashboard']);
+      } else if (role === 'CLIENT' || role === 'ROLE_CLIENT') {
+        this.router.navigate(['/client/citas']);
       } else {
-         this.router.navigate(['/admin/dashboard']);
+        // ADMIN, RECEPTIONIST u otros roles
+        this.router.navigate(['/admin/dashboard']);
       }
     }
   }
