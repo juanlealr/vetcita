@@ -1,0 +1,48 @@
+name: Backend CI (Spring Boot)
+
+on:
+  push:
+    branches: [ "main", "master", "dev" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    name: Build and Test Backend
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./vetcita-backend
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Inyectar Secretos de Producción
+        run: |
+          mkdir -p src/main/resources
+          cat <<EOF > src/main/resources/application-secrets.yml
+          spring:
+            datasource:
+              url: ${{ secrets.DB_URL }}
+              username: ${{ secrets.DB_USERNAME }}
+              password: ${{ secrets.DB_PASSWORD }}
+            mail:
+              username: ${{ secrets.MAIL_USERNAME }}
+              password: ${{ secrets.MAIL_PASSWORD }}
+          application:
+            security:
+              jwt:
+                secret-key: ${{ secrets.JWT_SECRET }}
+          EOF
+
+      - name: Compilar con Maven
+        run: mvn clean package -DskipTests
