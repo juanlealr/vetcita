@@ -1,5 +1,6 @@
 package co.edu.vetcita.users.service;
 
+import co.edu.vetcita.users.domain.IdentificationType;
 import co.edu.vetcita.users.domain.Role;
 import co.edu.vetcita.users.domain.User;
 import co.edu.vetcita.users.dto.CreateClientRequestDTO;
@@ -131,6 +132,48 @@ public class ProfileService {
 
         User saved = userRepository.save(receptionist);
         return UserProfileDTO.from(saved);
+    }
+
+    @Transactional
+    public void createVetAccount(String firstName, String lastName, String email, String phone, 
+                                 String password, String identificationType, String identificationNumber) {
+        
+        if (userRepository.findByEmail(email).isPresent()) {
+            System.err.println("El usuario con email " + email + " ya existe.");
+            return; 
+        }
+
+        var vetUser = User.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .email(email)
+                .phone(phone)
+                .identificationType(IdentificationType.valueOf(identificationType))
+                .identificationNumber(identificationNumber)
+                .role(Role.VET)
+                .active(true)
+                .password(passwordEncoder.encode(password))
+                .mustChangePassword(true)
+                .build();
+
+        userRepository.save(vetUser);
+    }
+
+    @Transactional
+    public void updateUserStatusByEmail(String email, boolean isActive) {
+        userRepository.findByEmail(email).ifPresent(user -> {
+            user.setActive(isActive);
+            userRepository.save(user);
+        });
+    }
+
+    @Transactional
+    public void updateUserDetailsByEmail(String email, String phone, boolean isActive) {
+        userRepository.findByEmail(email).ifPresent(user -> {
+            if (phone != null) user.setPhone(phone);
+            user.setActive(isActive);
+            userRepository.save(user);
+        });
     }
 
 }

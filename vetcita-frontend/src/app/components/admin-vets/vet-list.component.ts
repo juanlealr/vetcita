@@ -66,7 +66,7 @@ import Swal from 'sweetalert2';
                 </tr>
               }
               
-              <tr *ngFor="let vet of paginatedVets" class="hover:bg-slate-50 transition" [class.opacity-60]="!vet.active">
+              <tr *ngFor="let vet of paginatedVets" class="hover:bg-slate-50 transition" [class.opacity-60]="!vet.isActive">
                 <td class="px-6 py-4">
                   <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-bold overflow-hidden shrink-0">
@@ -88,8 +88,8 @@ import Swal from 'sweetalert2';
                 <td class="px-6 py-4 text-sm">{{ vet.phone || 'Sin teléfono' }}</td>
                 
                 <td class="px-6 py-4 text-center">
-                  <span [class]="vet.active ? 'bg-green-100 text-green-700' : 'bg-slate-200 text-slate-600'" class="px-3 py-1 rounded-full text-xs font-bold">
-                    {{ vet.active ? 'Activo' : 'Inactivo' }}
+                  <span [class]="vet.isActive ? 'bg-green-100 text-green-700' : 'bg-slate-200 text-slate-600'" class="px-3 py-1 rounded-full text-xs font-bold">
+                    {{ vet.isActive ? 'Activo' : 'Inactivo' }}
                   </span>
                 </td>
 
@@ -103,9 +103,9 @@ import Swal from 'sweetalert2';
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" /><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd" /></svg>
                     </a>
 
-                    <button (click)="toggleStatus(vet)" [class]="vet.active ? 'text-rose-400 hover:text-rose-600' : 'text-emerald-400 hover:text-emerald-600'" class="transition cursor-pointer" [title]="vet.active ? 'Desactivar' : 'Activar'">
-                      <svg *ngIf="vet.active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd" /></svg>
-                      <svg *ngIf="!vet.active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 11.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" /></svg>
+                    <button (click)="toggleStatus(vet)" [class]="vet.isActive ? 'text-rose-400 hover:text-rose-600' : 'text-emerald-400 hover:text-emerald-600'" class="transition cursor-pointer" [title]="vet.isActive ? 'Desactivar' : 'Activar'">
+                      <svg *ngIf="vet.isActive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd" /></svg>
+                      <svg *ngIf="!vet.isActive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 11.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" /></svg>
                     </button>
                   </div>
                 </td>
@@ -155,7 +155,7 @@ export class VetListComponent implements OnInit {
       next: (data) => {
         this.vets = data.map((vet: any) => ({
           ...vet,
-          active: vet.active !== undefined ? vet.active : vet.isActive
+          isActive: vet.isActive !== undefined ? vet.isActive : vet.active
         }));
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -183,7 +183,6 @@ export class VetListComponent implements OnInit {
     );
   }
 
-  // Getters para Paginación
   get totalPages(): number {
     return Math.ceil(this.filteredVets.length / this.itemsPerPage);
   }
@@ -202,14 +201,14 @@ export class VetListComponent implements OnInit {
   }
 
   toggleStatus(vet: Vet) {
-    const action = vet.active ? 'desactivar' : 'activar';
+    const action = vet.isActive ? 'desactivar' : 'activar';
     
     Swal.fire({
       title: `¿Estás seguro?`,
       text: `Vas a ${action} al Dr(a). ${vet.name}`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: vet.active ? '#d33' : '#10b981',
+      confirmButtonColor: vet.isActive ? '#d33' : '#10b981',
       cancelButtonColor: '#64748b',
       confirmButtonText: `Sí, ${action}`,
       cancelButtonText: 'Cancelar'
@@ -217,10 +216,7 @@ export class VetListComponent implements OnInit {
       if (result.isConfirmed) {
         this.vetService.toggleVetStatus(vet.id!).subscribe({
           next: () => {
-            vet.active = !vet.active; 
-            if ((vet as any).isActive !== undefined) {
-              (vet as any).isActive = vet.active;
-            }
+            vet.isActive = !vet.isActive; 
             
             this.cdr.detectChanges();
 

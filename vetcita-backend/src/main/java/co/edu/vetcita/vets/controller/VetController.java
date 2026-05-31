@@ -3,7 +3,8 @@ package co.edu.vetcita.vets.controller;
 import co.edu.vetcita.vets.domain.Vet;
 import co.edu.vetcita.vets.repository.VetRepository;
 import co.edu.vetcita.vets.VetCreatedEvent;
-
+import co.edu.vetcita.vets.VetStatusChangedEvent;
+import co.edu.vetcita.vets.VetUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +31,20 @@ public class VetController {
     }
 
     @PatchMapping("/{id}/toggle-status")
+    @Transactional
     public Vet toggleVetStatus(@PathVariable Long id) {
         Vet vet = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("Veterinario no encontrado"));
         
         vet.setIsActive(!vet.getIsActive());
-        return repository.save(vet);
+        Vet savedVet = repository.save(vet);
+
+        eventPublisher.publishEvent(new VetStatusChangedEvent(
+            vet.getEmail(), 
+            vet.getIsActive()
+        ));
+        
+        return savedVet;
     }
 
     @GetMapping("/{id}")
@@ -58,13 +67,16 @@ public class VetController {
             lastName,
             vet.getEmail(),
             vet.getPhone(),
-            vet.getPassword()
+            vet.getPassword(),
+            vet.getIdentificationType(),
+            vet.getIdentificationNumber()
         ));
 
         return savedVet;
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public Vet updateVet(@PathVariable Long id, @RequestBody Vet vetDetails) {
         Vet vet = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("Veterinario no encontrado"));
@@ -75,6 +87,14 @@ public class VetController {
         vet.setEmail(vetDetails.getEmail());
         vet.setIsActive(vetDetails.getIsActive());
 
-        return repository.save(vet);
+        Vet updatedVet = repository.save(vet);
+
+        eventPublisher.publishEvent(new VetUpdatedEvent(
+            vet.getEmail(), 
+            vet.getIsActive(),
+            vet.getPhone()
+        ));
+
+        return updatedVet;
     }
 }

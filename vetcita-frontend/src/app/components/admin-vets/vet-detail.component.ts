@@ -28,8 +28,8 @@ import { AppointmentService } from '../../services/appointment.service';
         <div class="flex-1 w-full text-center md:text-left">
           <div class="flex flex-col md:flex-row md:items-center gap-3 mb-4">
             <h2 class="text-2xl font-bold text-slate-800">Dr(a). {{ vet.name }}</h2>
-            <span [class]="vet.active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'" class="px-3 py-1 rounded-full text-xs font-bold w-fit mx-auto md:mx-0">
-              {{ vet.active ? 'Activo' : 'Inactivo' }}
+            <span [class]="vet.isActive ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'" class="px-3 py-1 rounded-full text-xs font-bold w-fit mx-auto md:mx-0">
+              {{ vet.isActive ? 'Activo' : 'Inactivo' }}
             </span>
           </div>
 

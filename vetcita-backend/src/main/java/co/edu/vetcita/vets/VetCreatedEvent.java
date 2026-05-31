@@ -5,5 +5,7 @@ public record VetCreatedEvent(
     String lastName,
     String email,
     String phone,
-    String password
+    String password,
+    String identificationType,
+    String identificationNumber
 ) {}

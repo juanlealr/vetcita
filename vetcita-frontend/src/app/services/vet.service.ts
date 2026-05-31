@@ -10,7 +10,7 @@ export interface Vet {
   specialty: string;
   phone: string;
   email: string;
-  active: boolean;
+  isActive: boolean;
   createdAt?: string;
   serviceIds?: number[];
   password?: string;
